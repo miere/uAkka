@@ -12,7 +12,8 @@ public abstract class Actor implements Runnable, ActorSystem {
 
 	@Delegate
 	private ActorSystem rootActorSystem;
-	private BlockingQueue<Object> mailbox;
+	private BlockingQueue<ActorMessage> mailbox;
+	ActorRef sender;
 
 	@Override
 	public void run() {
@@ -20,27 +21,46 @@ public abstract class Actor implements Runnable, ActorSystem {
 			mainloop();
 		} catch ( InterruptedException e ) {
 			log.debug("Interrupted?", e);
+		} finally {
+			try {
+				close();
+			} catch (Exception e) {
+				log.debug("Interrupted?", e);
+			}
 		}
 	}
 
 	private void mainloop() throws InterruptedException {
 		while( true ) {
-			log.debug("Waiting for messages...");
-			Object message = mailbox.take();
-			if ( message instanceof Close )
-				return;
+			ActorMessage actorMessage = waitForMessage();
+			interruptIfIsCloseMessage(actorMessage);
+			setSender( actorMessage.sender );
 			try {
-				onReceive(message);
+				onReceive(actorMessage.message);
 			} catch ( ActorException e ) {
-				log.error("Can't process " + message);
+				log.error("Can't process " + actorMessage.message);
 			}
 		}
 	}
-	
-	public void initialize() throws ActorException {}
+
+	private void interruptIfIsCloseMessage(ActorMessage actorMessage) throws CloseException {
+			if ( actorMessage.message instanceof Close )
+				throw new CloseException();
+	}
+
+	private ActorMessage waitForMessage() throws InterruptedException {
+		log.debug("Waiting for messages...");
+		ActorMessage actorMessage = mailbox.take();
+		return actorMessage;
+	}
+
+	public void preStart() throws ActorException {}
 
 	public abstract void onReceive(Object message) throws ActorException;
 	
 	public static class Close {}
 
+	public static class CloseException extends InterruptedException {
+		private static final long serialVersionUID = 4167808134415819506L;
+	}
 }

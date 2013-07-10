@@ -1,5 +1,8 @@
 package uakka.actor;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+
 public interface ActorSystem {
 
 	public abstract ActorRef actorOf(
@@ -12,6 +15,8 @@ public interface ActorSystem {
 
 	public abstract ActorRef actorFrom(String name);
 
-	public abstract void close();
+	public abstract void close() throws InterruptedException, ExecutionException;
+
+	public abstract ExecutorService getExecutorService();
 
 }

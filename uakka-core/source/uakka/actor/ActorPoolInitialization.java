@@ -28,6 +28,10 @@ public class ActorPoolInitialization implements ServletContextListener {
 	@Override
     public void contextDestroyed(ServletContextEvent event) {
     	log.info("Destroying actors...");
-    	actorSystem.close();
+    	try {
+			actorSystem.close();
+		} catch (Throwable e) {
+			log.error("Could not close actors", e);
+		}
     }
 }

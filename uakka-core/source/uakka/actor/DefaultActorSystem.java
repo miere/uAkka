@@ -4,15 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultActorSystem implements ActorSystem {
 
-	final  ExecutorService executorService;
+	final ExecutorService executorService;
 	Map<String, ActorRef> actorReferences = new HashMap<String, ActorRef>();
+	
+	public DefaultActorSystem() {
+		executorService = Executors.newCachedThreadPool();
+	}
 
 	@Override
 	public ActorRef actorOf( Class<? extends Actor> targetClass ) {
@@ -30,7 +36,7 @@ public class DefaultActorSystem implements ActorSystem {
 	@Override
 	public ActorRef actorOf(Class<? extends Actor> targetClass, ActorConfiguration configuration) {
 		try {
-			BlockingQueue<Object> mailboxMessages = initializeActors( targetClass, configuration );
+			BlockingQueue<ActorMessage> mailboxMessages = initializeActors( targetClass, configuration );
 			ActorRef actorRef = new ActorRef( mailboxMessages, configuration );
 			actorReferences.put( retrieveActorName( targetClass, configuration ), actorRef );
 			return actorRef;
@@ -55,10 +61,10 @@ public class DefaultActorSystem implements ActorSystem {
 				: configuration.name;
 	}
 
-	public BlockingQueue<Object> initializeActors(
+	public BlockingQueue<ActorMessage> initializeActors(
 			Class<? extends Actor> targetClass, ActorConfiguration configuration)
 			throws InstantiationException, IllegalAccessException {
-		BlockingQueue<Object> mailboxMessages = new ArrayBlockingQueue<Object>(configuration.getMessagePoolSize());
+		BlockingQueue<ActorMessage> mailboxMessages = new ArrayBlockingQueue<ActorMessage>(configuration.getMessagePoolSize());
 
 		for ( int i=0; i<configuration.getNumberOfParallelActors(); i++ )
 			newActor(targetClass, mailboxMessages);
@@ -66,20 +72,20 @@ public class DefaultActorSystem implements ActorSystem {
 		return mailboxMessages;
 	}
 
-	public void newActor(Class<? extends Actor> targetClass, BlockingQueue<Object> mailboxMessages)
+	public void newActor(Class<? extends Actor> targetClass, BlockingQueue<ActorMessage> mailboxMessages)
 			throws InstantiationException, IllegalAccessException {
 		Actor actor = targetClass.newInstance();
 		actor.setMailbox(mailboxMessages);
-		actor.setRootActorSystem(this);
-		actor.initialize();
+		actor.setRootActorSystem(new DefaultActorSystem(getExecutorService()));
+		actor.preStart();
 		getExecutorService().submit(actor);
 	}
 
 	public ExecutorService getExecutorService() {
 		return executorService;
 	}
-	
-	public void close(){
+
+	public void close() throws InterruptedException, ExecutionException{
 		for ( String name : actorReferences.keySet() )
 			actorReferences.get(name).close();
 		actorReferences.clear();
