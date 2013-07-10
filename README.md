@@ -28,8 +28,8 @@ public class RequestHandlerActor extends Actor {
 
 	ActorRef printActor;
 
-	@Override
-	public void initialize() {
+	@Override // called when the actor is created
+	public void preStart() {
 		printActor = actorOf( PrintActor.class );
 	}
 
