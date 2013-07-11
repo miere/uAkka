@@ -1,4 +1,4 @@
-package uakka.actor;
+package io.skullabs.uakka;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

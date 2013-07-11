@@ -1,4 +1,4 @@
-package uakka.actor;
+package io.skullabs.uakka;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;

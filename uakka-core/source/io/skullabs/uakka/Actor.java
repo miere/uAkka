@@ -1,4 +1,4 @@
-package uakka.actor;
+package io.skullabs.uakka;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -21,6 +21,9 @@ public abstract class Actor implements Runnable, ActorSystem {
 			mainloop();
 		} catch ( InterruptedException e ) {
 			log.debug("Interrupted?", e);
+		} catch ( NullPointerException e ) {
+			log.error("Bad Actor, it throws NPE. Did you forget to test it?", e);
+			e.printStackTrace();
 		} finally {
 			try {
 				close();
@@ -38,6 +41,7 @@ public abstract class Actor implements Runnable, ActorSystem {
 			try {
 				onReceive(actorMessage.message);
 			} catch ( ActorException e ) {
+				e.printStackTrace();
 				log.error("Can't process " + actorMessage.message);
 			}
 		}

@@ -1,4 +1,4 @@
-package uakka.actor;
+package io.skullabs.uakka;
 
 import javax.servlet.ServletContext;
 

@@ -1,4 +1,4 @@
-package uakka.actor;
+package io.skullabs.uakka;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

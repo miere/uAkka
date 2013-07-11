@@ -1,4 +1,9 @@
-package uakka.actor;
+package io.skullabs.uakka;
+
+import io.skullabs.uakka.ActorRef;
+import io.skullabs.uakka.ActorSystem;
+import io.skullabs.uakka.DefaultActorSystem;
+import io.skullabs.uakka.SampleActors.*;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -8,7 +13,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uakka.actor.SampleActors.*;
 import static org.junit.Assert.*;
 
 public class ActorTest {

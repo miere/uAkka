@@ -1,4 +1,9 @@
-package uakka.actor;
+package io.skullabs.uakka;
+
+import io.skullabs.uakka.Actor;
+import io.skullabs.uakka.ActorConfiguration;
+import io.skullabs.uakka.ActorException;
+import io.skullabs.uakka.ActorRef;
 
 import java.util.concurrent.CountDownLatch;
 
