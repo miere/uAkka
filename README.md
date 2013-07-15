@@ -1,6 +1,8 @@
 uAkka
 =====
 
+[![Build Status](https://travis-ci.org/SkullLabs/uAkka.png?branch=master)](https://travis-ci.org/SkullLabs/uAkka)
+
 Really Tiny Akka Actor Simulation
 
 It provides only a tiny set of functionality that Akka provides, but it's useful to accomplish some goals that akka provides you like Domain Driven Developement, low coupling code and distributed business logic.
