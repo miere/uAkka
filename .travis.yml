@@ -1,0 +1,10 @@
+language: java
+script: mvn clean install
+# whitelist
+branches:
+  only:
+    - master
+
+notifications:
+  email:
+    - miere.teixeira+uakka-travis-ci@gmail.com
