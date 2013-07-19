@@ -9,6 +9,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>uakka-simple</module>
 		<module>uakka-core</module>
 	</modules>
 
