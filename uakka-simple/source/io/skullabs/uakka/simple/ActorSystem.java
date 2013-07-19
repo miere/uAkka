@@ -1,4 +1,4 @@
-package io.skullabs.uakka;
+package io.skullabs.uakka.simple;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;

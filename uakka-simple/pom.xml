@@ -7,8 +7,8 @@
 		<version>1.0-SNAPSHOT</version>
 		<artifactId>uakka-parent</artifactId>
 	</parent>
-	<artifactId>uakka-core</artifactId>
-	<name>uAkka: Really Tiny Akka Implementation</name>
+	<artifactId>uakka-simple</artifactId>
+	<name>uAkka: Really Tiny and Simple Akka Implementation</name>
 	<packaging>jar</packaging>
 
 	<licenses>

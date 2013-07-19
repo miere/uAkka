@@ -1,11 +1,11 @@
-package io.skullabs.uakka;
+package io.skullabs.uakka.simple;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ActorMessage {
+public class ActorMessageEnvelop {
 
 	Object message;
 	ActorRef sender;

@@ -1,4 +1,4 @@
-package io.skullabs.uakka;
+package io.skullabs.uakka.simple;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class DefaultActorSystem implements ActorSystem {
 	@Override
 	public ActorRef actorOf(Class<? extends Actor> targetClass, ActorConfiguration configuration) {
 		try {
-			BlockingQueue<ActorMessage> mailboxMessages = initializeActors( targetClass, configuration );
+			BlockingQueue<ActorMessageEnvelop> mailboxMessages = initializeActors( targetClass, configuration );
 			ActorRef actorRef = new ActorRef( mailboxMessages, configuration );
 			actorReferences.put( retrieveActorName( targetClass, configuration ), actorRef );
 			return actorRef;
@@ -61,10 +61,10 @@ public class DefaultActorSystem implements ActorSystem {
 				: configuration.name;
 	}
 
-	public BlockingQueue<ActorMessage> initializeActors(
+	public BlockingQueue<ActorMessageEnvelop> initializeActors(
 			Class<? extends Actor> targetClass, ActorConfiguration configuration)
 			throws InstantiationException, IllegalAccessException {
-		BlockingQueue<ActorMessage> mailboxMessages = new ArrayBlockingQueue<ActorMessage>(configuration.getMessagePoolSize());
+		BlockingQueue<ActorMessageEnvelop> mailboxMessages = new ArrayBlockingQueue<ActorMessageEnvelop>(configuration.getMessagePoolSize());
 
 		for ( int i=0; i<configuration.getNumberOfParallelActors(); i++ )
 			newActor(targetClass, mailboxMessages);
@@ -72,7 +72,7 @@ public class DefaultActorSystem implements ActorSystem {
 		return mailboxMessages;
 	}
 
-	public void newActor(Class<? extends Actor> targetClass, BlockingQueue<ActorMessage> mailboxMessages)
+	public void newActor(Class<? extends Actor> targetClass, BlockingQueue<ActorMessageEnvelop> mailboxMessages)
 			throws InstantiationException, IllegalAccessException {
 		Actor actor = targetClass.newInstance();
 		actor.setMailbox(mailboxMessages);

@@ -1,4 +1,4 @@
-package io.skullabs.uakka;
+package io.skullabs.uakka.simple;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

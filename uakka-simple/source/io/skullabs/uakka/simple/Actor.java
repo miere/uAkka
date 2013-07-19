@@ -1,4 +1,4 @@
-package io.skullabs.uakka;
+package io.skullabs.uakka.simple;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -12,7 +12,7 @@ public abstract class Actor implements Runnable, ActorSystem {
 
 	@Delegate
 	private ActorSystem rootActorSystem;
-	private BlockingQueue<ActorMessage> mailbox;
+	private BlockingQueue<ActorMessageEnvelop> mailbox;
 	ActorRef sender;
 
 	@Override
@@ -35,7 +35,7 @@ public abstract class Actor implements Runnable, ActorSystem {
 
 	private void mainloop() throws InterruptedException {
 		while( true ) {
-			ActorMessage actorMessage = waitForMessage();
+			ActorMessageEnvelop actorMessage = waitForMessage();
 			interruptIfIsCloseMessage(actorMessage);
 			setSender( actorMessage.sender );
 			try {
@@ -47,14 +47,14 @@ public abstract class Actor implements Runnable, ActorSystem {
 		}
 	}
 
-	private void interruptIfIsCloseMessage(ActorMessage actorMessage) throws CloseException {
+	private void interruptIfIsCloseMessage(ActorMessageEnvelop actorMessage) throws CloseException {
 			if ( actorMessage.message instanceof Close )
 				throw new CloseException();
 	}
 
-	private ActorMessage waitForMessage() throws InterruptedException {
+	private ActorMessageEnvelop waitForMessage() throws InterruptedException {
 		log.debug("Waiting for messages...");
-		ActorMessage actorMessage = mailbox.take();
+		ActorMessageEnvelop actorMessage = mailbox.take();
 		return actorMessage;
 	}
 

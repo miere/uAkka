@@ -1,4 +1,4 @@
-package io.skullabs.uakka;
+package io.skullabs.uakka.simple;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -12,43 +12,46 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AsyncResponse implements Future<Object> {
 
-	enum State { WAITING, DONE, CANCELLED }
+	enum State {
+		WAITING, DONE, CANCELLED
+	}
 
-	@NonNull BlockingQueue<Object> queue;
+	@NonNull
+	BlockingQueue<ActorMessageEnvelop> queue;
 	State state = State.WAITING;
 
 	@Override
-	public boolean cancel(boolean mayInterruptIfRunning) {
+	public boolean cancel( boolean mayInterruptIfRunning ) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Object get() throws InterruptedException, ExecutionException {
-		Object value = queue.take();
-		state = State.DONE;
-		return value;
+		ActorMessageEnvelop envelop = this.queue.take();
+		this.state = State.DONE;
+		return envelop.getMessage();
 	}
 
 	@Override
-	public Object get(long timeout, TimeUnit unit) throws InterruptedException,
+	public Object get( long timeout, TimeUnit unit ) throws InterruptedException,
 			ExecutionException, TimeoutException {
-		Object object = queue.poll(timeout, unit);
-		if ( object == null ) {
-			state = State.CANCELLED;
+		ActorMessageEnvelop envelop = this.queue.poll( timeout, unit );
+		if ( envelop == null ) {
+			this.state = State.CANCELLED;
 			throw new TimeoutException();
 		}
-		state = State.DONE;
-		return object;
+		this.state = State.DONE;
+		return envelop.getMessage();
 	}
 
 	@Override
 	public boolean isCancelled() {
-		return state == State.CANCELLED;
+		return this.state == State.CANCELLED;
 	}
 
 	@Override
 	public boolean isDone() {
-		return state == State.DONE;
+		return this.state == State.DONE;
 	}
 
 }
