@@ -37,7 +37,7 @@ public class InjectableField {
 			this.field.setAccessible( true );
 	}
 
-	public void inject( Object target ) {
+	public void inject( Object target ) throws InjectionException {
 		Object newInstance = this.classFactory.newInstance( target, this.field );
 		set( target, newInstance );
 	}

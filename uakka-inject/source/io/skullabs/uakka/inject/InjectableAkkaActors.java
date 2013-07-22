@@ -1,7 +1,4 @@
-package io.skullabs.uakka.servlet;
-
-import io.skullabs.uakka.inject.InjectableClass;
-import io.skullabs.uakka.inject.Injectables;
+package io.skullabs.uakka.inject;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,12 +6,14 @@ import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 import akka.actor.Actor;
+import akka.actor.ActorRef;
 import akka.actor.ActorRefFactory;
+import akka.actor.ActorSelection;
 import akka.actor.Props;
 import akka.japi.Creator;
 
 @RequiredArgsConstructor
-public class ServletAkkaActors {
+public class InjectableAkkaActors {
 
 	final Map<String, InjectableClass<?>> actors = new HashMap<String, InjectableClass<?>>();
 	final Injectables injectables;
@@ -41,14 +40,17 @@ public class ServletAkkaActors {
 			newInstance( actorRefFactory, clazz, service );
 	}
 
-	// TODO: create a newinstance method for any possible creator
-	public void newInstance( ActorRefFactory actorRefFactory, Class<? extends Actor> clazz, Service serviceAnnotation ) {
-		String name = serviceAnnotation.name();
-		newInstance( actorRefFactory, clazz, name );
+	public ActorSelection newInstance( ActorRefFactory actorRefFactory, Service serviceAnnotation ) {
+		return actorRefFactory.actorSelection( serviceAnnotation.path() );
 	}
 
-	private void newInstance( ActorRefFactory actorRefFactory, Class<? extends Actor> clazz, String name ) {
-		actorRefFactory.actorOf( createActorProps( clazz.getCanonicalName() ), name );
+	public ActorRef newInstance( ActorRefFactory actorRefFactory, Class<? extends Actor> clazz, Service serviceAnnotation ) {
+		String name = serviceAnnotation.name();
+		return newInstance( actorRefFactory, clazz, name );
+	}
+
+	private ActorRef newInstance( ActorRefFactory actorRefFactory, Class<? extends Actor> clazz, String name ) {
+		return actorRefFactory.actorOf( createActorProps( clazz.getCanonicalName() ), name );
 	}
 
 	private Props createActorProps( String canonicalName ) {

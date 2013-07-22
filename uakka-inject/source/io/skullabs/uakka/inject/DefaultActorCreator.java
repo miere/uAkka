@@ -1,6 +1,5 @@
-package io.skullabs.uakka.servlet;
+package io.skullabs.uakka.inject;
 
-import io.skullabs.uakka.inject.InjectableClass;
 import lombok.RequiredArgsConstructor;
 import akka.actor.Actor;
 import akka.japi.Creator;

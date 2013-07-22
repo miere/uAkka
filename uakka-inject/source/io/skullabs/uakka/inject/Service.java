@@ -1,4 +1,4 @@
-package io.skullabs.uakka.servlet;
+package io.skullabs.uakka.inject;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

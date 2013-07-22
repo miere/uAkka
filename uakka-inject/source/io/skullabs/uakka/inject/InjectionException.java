@@ -10,6 +10,10 @@ public class InjectionException extends Exception {
 		super( e );
 	}
 
+	public InjectionException( String string ) {
+		super( string );
+	}
+
 	private static final long serialVersionUID = 9085427867521502627L;
 
 }
