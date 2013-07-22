@@ -10,7 +10,8 @@
 
 	<modules>
 		<module>uakka-simple</module>
-		<module>uakka-core</module>
+		<module>uakka-inject</module>
+		<module>uakka-servlet</module>
 	</modules>
 
 	<build>
