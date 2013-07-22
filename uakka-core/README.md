@@ -1,2 +1,0 @@
-# uAkka Core Package
-
