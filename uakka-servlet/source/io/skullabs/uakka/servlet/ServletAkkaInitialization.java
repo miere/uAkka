@@ -14,9 +14,11 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.HandlesTypes;
+import javax.servlet.annotation.WebListener;
 
 import akka.actor.Actor;
 
+@WebListener
 @HandlesTypes( {
 		Actor.class,
 		InjectableClassFactory.class
@@ -29,7 +31,11 @@ public class ServletAkkaInitialization
 			Set<Class<?>> classes,
 			ServletContext servletContext ) throws ServletException {
 		try {
-			createInjectableAkkaInitialization( classes, servletContext );
+			servletContext.log( "Embedded Akka Servlet Integration actived!" );
+			InjectionConfiguration injectionConfiguration = createInjectionConfiguration( servletContext );
+			InjectableAkkaInitialization akkaInitialization = new InjectableAkkaInitialization( classes, injectionConfiguration );
+			akkaInitialization.initialize();
+			servletContext.log( "Embedded Akka Servlet Integration initialized!" );
 		} catch ( InjectionException e ) {
 			throw new ServletException( e );
 		}
@@ -42,28 +48,11 @@ public class ServletAkkaInitialization
 	@Override
 	public void contextDestroyed( ServletContextEvent sce ) {
 		ServletContext servletContext = sce.getServletContext();
-		servletContext.log( "Shutting down Akka Servlet Integration!" );
+		servletContext.log( "Shutting down Embedded Akka Servlet Integration!" );
 		InjectionConfiguration injectionConfiguration = new ServletInjectionConfiguration( servletContext );
 		InjectableAkkaInitialization akkaInitialization = getInjectableAkkaInitialization( injectionConfiguration );
 		akkaInitialization.shutdown();
 		injectionConfiguration.setInjectableAkkaActors( null );
-	}
-
-	@Override
-	public void contextInitialized( ServletContextEvent sce ) {
-		try {
-			ServletContext servletContext = sce.getServletContext();
-			InjectableAkkaInitialization akkaInitialization = getInjectableAkkaInitialization( servletContext );
-			akkaInitialization.initialize();
-			servletContext.log( "Akka Servlet Integration initialized!" );
-		} catch ( InjectionException e ) {
-			throw new RuntimeException( "Could not initialize actors", e );
-		}
-	}
-
-	public InjectableAkkaInitialization getInjectableAkkaInitialization( ServletContext servletContext ) {
-		ServletInjectionConfiguration injectionConfiguration = new ServletInjectionConfiguration( servletContext );
-		return getInjectableAkkaInitialization( injectionConfiguration );
 	}
 
 	private InjectableAkkaInitialization getInjectableAkkaInitialization( InjectionConfiguration injectionConfiguration ) {
@@ -71,8 +60,7 @@ public class ServletAkkaInitialization
 		return new InjectableAkkaInitialization( injectableAkkaActors );
 	}
 
-	public void createInjectableAkkaInitialization( Set<Class<?>> classes, ServletContext servletContext ) throws InjectionException {
-		InjectionConfiguration injectionConfiguration = createInjectionConfiguration( servletContext );
-		new InjectableAkkaInitialization( classes, injectionConfiguration );
+	@Override
+	public void contextInitialized( ServletContextEvent sce ) {
 	}
 }

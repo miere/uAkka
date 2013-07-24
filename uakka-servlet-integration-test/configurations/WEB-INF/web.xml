@@ -9,8 +9,4 @@
 <!-- 		<url-pattern>/*</url-pattern> -->
 <!-- 	</filter-mapping> -->
 
-	<listener>
-		<listener-class>io.skullabs.uakka.servlet.ServletAkkaInitialization</listener-class>
-	</listener>
-
 </web-app>
