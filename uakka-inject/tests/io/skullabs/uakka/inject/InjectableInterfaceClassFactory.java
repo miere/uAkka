@@ -2,7 +2,7 @@ package io.skullabs.uakka.inject;
 
 import java.lang.reflect.Field;
 
-public class InjectableInterfaceClassFactory extends InjectableClassFactory<InjectableInterface> {
+public class InjectableInterfaceClassFactory extends AbstractInjectableClassFactory<InjectableInterface> {
 
 	@Override
 	public Object newInstance( Object instance, Field injectableField ) {

@@ -2,28 +2,32 @@ package io.skullabs.uakka.inject;
 
 import java.util.Set;
 
+import lombok.Delegate;
+import lombok.RequiredArgsConstructor;
 import akka.actor.ActorSystem;
 
+@RequiredArgsConstructor
 public class InjectableAkkaInitialization {
 
-	private ActorSystem actorSystem;
-	private InjectableAkkaActors injectableAkkaActors;
+	private static interface DelegatedMethods {
+		void initialize() throws InjectionException;
 
-	public void initialize( Set<Class<?>> classes, InjectionConfiguration injectionConfiguration ) throws InjectionException {
-		createActorSystem( injectionConfiguration );
-		analize( injectionConfiguration, classes );
+		void shutdown();
 	}
 
-	private void createActorSystem( InjectionConfiguration configuration ) {
-		this.actorSystem = ActorSystem.create( configuration.toString() );
-		configuration.setAttribute( ActorSystem.class.getCanonicalName(), this.actorSystem );
-	}
+	@Delegate( types = DelegatedMethods.class )
+	final private InjectableAkkaActors injectableAkkaActors;
 
-	private void analize( InjectionConfiguration configuration, Set<Class<?>> classes ) throws InjectionException {
+	public InjectableAkkaInitialization( Set<Class<?>> classes, InjectionConfiguration configuration ) throws InjectionException {
+		ActorSystem actorSystem = createActorSystem( configuration );
 		InjectableDiscoveryService injectableDiscoveryService = new InjectableDiscoveryService( configuration );
 		Injectables injectables = injectableDiscoveryService.discovery( classes );
-		this.injectableAkkaActors = new InjectableAkkaActors( injectables );
-		configuration.setAttribute( InjectableAkkaActors.class.getCanonicalName(), this.injectableAkkaActors );
-		this.injectableAkkaActors.configure( this.actorSystem, classes );
+		this.injectableAkkaActors = new InjectableAkkaActors( injectables, actorSystem );
+		configuration.setInjectableAkkaActors( this.injectableAkkaActors );
+		this.injectableAkkaActors.analise( classes );
+	}
+
+	private ActorSystem createActorSystem( InjectionConfiguration configuration ) {
+		return ActorSystem.create( configuration.toString() );
 	}
 }

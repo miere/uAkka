@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.Getter;
+
+@Getter
 public class InjectableClass<T> {
 
 	Injectables injectables;
@@ -42,7 +45,7 @@ public class InjectableClass<T> {
 
 	public T newInstance() throws InjectionException {
 		try {
-			T newInstance = newInstance();
+			T newInstance = newInstance( this.targetClass );
 			for ( InjectableField field : this.fields )
 				field.inject( newInstance );
 			return newInstance;

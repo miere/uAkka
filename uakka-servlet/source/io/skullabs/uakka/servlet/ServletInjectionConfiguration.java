@@ -1,9 +1,7 @@
 package io.skullabs.uakka.servlet;
 
-import static java.lang.String.format;
+import io.skullabs.uakka.inject.InjectableAkkaActors;
 import io.skullabs.uakka.inject.InjectionConfiguration;
-
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
@@ -25,8 +23,17 @@ public class ServletInjectionConfiguration implements InjectionConfiguration {
 	}
 
 	private String generateIdentificator( ServletContext servletContext ) {
-		return format( "%s%s", servletContext.getContextPath(),
-				new UUID( System.currentTimeMillis(), System.nanoTime() ) );
+		return servletContext.getContextPath().replaceFirst( "/", "" );
+	}
+
+	@Override
+	public InjectableAkkaActors getInjectableAkkaActors() {
+		return (InjectableAkkaActors)getAttribute( InjectableAkkaActors.class.getCanonicalName() );
+	}
+
+	@Override
+	public void setInjectableAkkaActors( InjectableAkkaActors injectableAkkaActors ) {
+		setAttribute( InjectableAkkaActors.class.getCanonicalName(), injectableAkkaActors );
 	}
 
 	@Override

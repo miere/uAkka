@@ -6,4 +6,8 @@ public interface InjectionConfiguration {
 
 	public Object getAttribute( String name );
 
+	public InjectableAkkaActors getInjectableAkkaActors();
+
+	public void setInjectableAkkaActors( InjectableAkkaActors injectableAkkaActors );
+
 }

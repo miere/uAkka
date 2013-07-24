@@ -1,5 +1,6 @@
 package io.skullabs.uakka.inject;
 
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,8 @@ public class InjectableDiscoveryService {
 	}
 
 	private boolean isInjectableClassFactory( Class<?> clazz ) {
-		return InjectableClassFactory.class.isAssignableFrom( clazz );
+		return InjectableClassFactory.class.isAssignableFrom( clazz )
+				&& !clazz.isInterface() && !Modifier.isAbstract( clazz.getModifiers() );
 	}
 
 	private void memorizeFactory( Class<?> clazz ) throws InjectionException {
@@ -33,7 +35,7 @@ public class InjectableDiscoveryService {
 			factory.initialize( this.configuration );
 			this.classFactories.put( factory.getGenericClass().getCanonicalName(), factory );
 		} catch ( Exception e ) {
-			throw new InjectionException( e );
+			throw new InjectionException( "Can't to memorize class factory " + clazz.getCanonicalName(), e );
 		}
 	}
 }
