@@ -1,6 +1,10 @@
-package io.skullabs.uakka.inject;
+package io.skullabs.uakka.impl;
 
-import io.skullabs.uakka.inject.ActorInfo.CreationInfo;
+import io.skullabs.uakka.api.AkkaActors;
+import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.Service;
+import io.skullabs.uakka.api.ActorInfo.CreationInfo;
+import io.skullabs.uakka.inject.AbstractInjectableClassFactory;
 
 import java.lang.reflect.Field;
 
@@ -32,7 +36,7 @@ public class ServiceActorClassFactory extends AbstractInjectableClassFactory<Ser
 
 	private Object newInstance( Actor instance, Service serviceAnnotation ) throws InjectionException {
 		ActorContext context = instance.context();
-		InjectableAkkaActors injectableAkkaActors = getConfiguration().getInjectableAkkaActors();
+		AkkaActors injectableAkkaActors = getConfiguration().getAkkaActors();
 		return injectableAkkaActors.actor( context, new CreationInfo( serviceAnnotation ) );
 	}
 

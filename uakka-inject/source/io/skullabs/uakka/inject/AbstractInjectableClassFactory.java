@@ -1,5 +1,9 @@
 package io.skullabs.uakka.inject;
 
+import io.skullabs.uakka.api.AkkaConfiguration;
+import io.skullabs.uakka.api.InjectableClassFactory;
+import io.skullabs.uakka.api.InjectionException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 
@@ -8,10 +12,10 @@ import lombok.Getter;
 public abstract class AbstractInjectableClassFactory<T> implements InjectableClassFactory<T> {
 
 	@Getter
-	InjectionConfiguration configuration;
+	AkkaConfiguration configuration;
 
 	@Override
-	public void initialize( InjectionConfiguration configuration ) {
+	public void initialize( AkkaConfiguration configuration ) {
 		this.configuration = configuration;
 		initialize();
 	}
@@ -26,6 +30,7 @@ public abstract class AbstractInjectableClassFactory<T> implements InjectableCla
 	@Override
 	public abstract Object newInstance( Object instance, Field injectableField ) throws InjectionException;
 
+	@Override
 	@SuppressWarnings( "unchecked" )
 	public Class<T> getGenericClass() {
 		return (Class<T>)( (ParameterizedType)getClass().getGenericSuperclass() )

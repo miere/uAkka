@@ -1,7 +1,7 @@
 package io.skullabs.uakka.servlet;
 
-import io.skullabs.uakka.inject.Reference;
-import io.skullabs.uakka.inject.Service;
+import io.skullabs.uakka.api.Reference;
+import io.skullabs.uakka.api.Service;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

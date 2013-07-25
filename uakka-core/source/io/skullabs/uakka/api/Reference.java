@@ -1,4 +1,4 @@
-package io.skullabs.uakka.inject;
+package io.skullabs.uakka.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,11 +8,11 @@ import java.lang.annotation.Target;
 import akka.actor.Actor;
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.TYPE, ElementType.FIELD } )
-public @interface Service {
+@Target( ElementType.FIELD )
+public @interface Reference {
 
-	String value() default "";
+	String path() default "";
 
-	Class<? extends Actor> actor() default Actor.class;
+	Class<? extends Actor> actor();
 
 }

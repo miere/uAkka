@@ -1,4 +1,4 @@
-package io.skullabs.uakka.inject;
+package io.skullabs.uakka.api;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

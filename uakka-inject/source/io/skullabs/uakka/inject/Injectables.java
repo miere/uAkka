@@ -1,5 +1,7 @@
 package io.skullabs.uakka.inject;
 
+import io.skullabs.uakka.api.InjectableClassFactory;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Map;

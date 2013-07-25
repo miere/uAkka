@@ -1,5 +1,7 @@
 package io.skullabs.uakka.inject;
 
+import io.skullabs.uakka.api.AkkaConfiguration;
+
 import java.lang.reflect.Field;
 
 public class InjectableAnnotationClassFactory extends AbstractInjectableClassFactory<InjectableAnnotation> {
@@ -13,6 +15,6 @@ public class InjectableAnnotationClassFactory extends AbstractInjectableClassFac
 
 	@Override
 	public void initialize(
-			InjectionConfiguration configuration ) {
+			AkkaConfiguration configuration ) {
 	}
 }

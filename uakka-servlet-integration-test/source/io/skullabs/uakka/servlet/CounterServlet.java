@@ -1,9 +1,9 @@
 package io.skullabs.uakka.servlet;
 
 import static akka.pattern.Patterns.ask;
-import io.skullabs.uakka.inject.ActorInfo.SearchInfo;
-import io.skullabs.uakka.inject.InjectableAkkaActors;
-import io.skullabs.uakka.inject.InjectionConfiguration;
+import io.skullabs.uakka.api.ActorInfo.SearchInfo;
+import io.skullabs.uakka.api.AkkaActors;
+import io.skullabs.uakka.api.AkkaConfiguration;
 import io.skullabs.uakka.servlet.DistributedCounterActor.CountMessage;
 
 import java.io.IOException;
@@ -30,14 +30,14 @@ public class CounterServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		InjectableAkkaActors akkaActors = getInjectableAkkaActors();
+		AkkaActors akkaActors = getInjectableAkkaActors();
 		this.distrCounterActor = akkaActors.actor( new SearchInfo( DistributedCounterActor.class ) );
 		System.out.println( "CounterServlet initialized!" );
 	}
 
-	private InjectableAkkaActors getInjectableAkkaActors() {
-		InjectionConfiguration injectionConfiguration = new ServletInjectionConfiguration( getServletContext() );
-		return injectionConfiguration.getInjectableAkkaActors();
+	private AkkaActors getInjectableAkkaActors() {
+		AkkaConfiguration injectionConfiguration = new ServletAkkaConfiguration( getServletContext() );
+		return injectionConfiguration.getAkkaActors();
 	}
 
 	@Override

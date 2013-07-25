@@ -1,5 +1,9 @@
 package io.skullabs.uakka.inject;
 
+import io.skullabs.uakka.api.AkkaConfiguration;
+import io.skullabs.uakka.api.InjectableClassFactory;
+import io.skullabs.uakka.api.InjectionException;
+
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class InjectableDiscoveryService {
 
 	Map<String, InjectableClassFactory<?>> classFactories = new HashMap<String, InjectableClassFactory<?>>();
-	final InjectionConfiguration configuration;
+	final AkkaConfiguration configuration;
 
 	public Injectables discovery( Collection<Class<?>> classes ) throws InjectionException {
 		analize( classes );

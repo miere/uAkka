@@ -1,7 +1,13 @@
-package io.skullabs.uakka.inject;
+package io.skullabs.uakka.impl;
 
-import io.skullabs.uakka.inject.ActorInfo.CreationInfo;
-import io.skullabs.uakka.inject.ActorInfo.SearchInfo;
+import io.skullabs.uakka.api.AkkaActors;
+import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.Reference;
+import io.skullabs.uakka.api.Service;
+import io.skullabs.uakka.api.ActorInfo.CreationInfo;
+import io.skullabs.uakka.api.ActorInfo.SearchInfo;
+import io.skullabs.uakka.inject.AbstractInjectableClassFactory;
+import io.skullabs.uakka.service.DefaultAkkaActors;
 
 import java.lang.reflect.Field;
 
@@ -12,7 +18,7 @@ import akka.actor.ActorSelection;
 
 public class ReferenceActorClassFactory extends AbstractInjectableClassFactory<Reference> {
 
-	InjectableAkkaActors injectableAkkaActors;
+	AkkaActors injectableAkkaActors;
 
 	@Override
 	public Object newInstance( Object instance, Field injectableField ) throws InjectionException {
@@ -61,10 +67,10 @@ public class ReferenceActorClassFactory extends AbstractInjectableClassFactory<R
 		return str == null || str.isEmpty();
 	}
 
-	public InjectableAkkaActors getInjectableAkkaActors() {
+	public AkkaActors getInjectableAkkaActors() {
 		if ( this.injectableAkkaActors == null )
-			this.injectableAkkaActors = (InjectableAkkaActors)this.configuration.getAttribute(
-					InjectableAkkaActors.class.getCanonicalName() );
+			this.injectableAkkaActors = (AkkaActors)this.getConfiguration().getAttribute(
+					DefaultAkkaActors.class.getCanonicalName() );
 		return this.injectableAkkaActors;
 	}
 }

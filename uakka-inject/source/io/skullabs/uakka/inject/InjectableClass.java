@@ -1,5 +1,8 @@
 package io.skullabs.uakka.inject;
 
+import io.skullabs.uakka.api.InjectableClassFactory;
+import io.skullabs.uakka.api.InjectionException;
+
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;

@@ -1,7 +1,7 @@
 package io.skullabs.uakka.servlet;
 
-import io.skullabs.uakka.inject.InjectableAkkaActors;
-import io.skullabs.uakka.inject.InjectionConfiguration;
+import io.skullabs.uakka.api.AkkaActors;
+import io.skullabs.uakka.api.AkkaConfiguration;
 
 import javax.servlet.ServletContext;
 
@@ -10,7 +10,7 @@ import lombok.Getter;
 
 import com.typesafe.config.Config;
 
-public class ServletInjectionConfiguration implements InjectionConfiguration {
+public class ServletAkkaConfiguration implements AkkaConfiguration {
 
 	@Delegate
 	final ServletContext servletContext;
@@ -18,7 +18,7 @@ public class ServletInjectionConfiguration implements InjectionConfiguration {
 	@Getter
 	final String identificator;
 
-	public ServletInjectionConfiguration(
+	public ServletAkkaConfiguration(
 			ServletContext servletContext ) {
 		this.servletContext = servletContext;
 		this.identificator = generateIdentificator( servletContext );
@@ -29,13 +29,13 @@ public class ServletInjectionConfiguration implements InjectionConfiguration {
 	}
 
 	@Override
-	public InjectableAkkaActors getInjectableAkkaActors() {
-		return (InjectableAkkaActors)getAttribute( InjectableAkkaActors.class.getCanonicalName() );
+	public AkkaActors getAkkaActors() {
+		return (AkkaActors)getAttribute( AkkaActors.class.getCanonicalName() );
 	}
 
 	@Override
-	public void setInjectableAkkaActors( InjectableAkkaActors injectableAkkaActors ) {
-		setAttribute( InjectableAkkaActors.class.getCanonicalName(), injectableAkkaActors );
+	public void setAkkaActors( AkkaActors injectableAkkaActors ) {
+		setAttribute( AkkaActors.class.getCanonicalName(), injectableAkkaActors );
 	}
 
 	@Override

@@ -1,7 +1,12 @@
-package io.skullabs.uakka.inject;
+package io.skullabs.uakka.service;
 
-import io.skullabs.uakka.inject.ActorInfo.CreationInfo;
-import io.skullabs.uakka.inject.ActorInfo.SearchInfo;
+import io.skullabs.uakka.api.ActorInfo.CreationInfo;
+import io.skullabs.uakka.api.ActorInfo.SearchInfo;
+import io.skullabs.uakka.api.AkkaActors;
+import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.Service;
+import io.skullabs.uakka.inject.InjectableClass;
+import io.skullabs.uakka.inject.Injectables;
 
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -21,7 +26,7 @@ import akka.actor.Props;
 import akka.japi.Creator;
 
 @RequiredArgsConstructor
-public class InjectableAkkaActors {
+public class DefaultAkkaActors implements AkkaActors {
 
 	final Map<String, InjectableClass<?>> actors = new HashMap<String, InjectableClass<?>>();
 	final Map<String, ActorRef> actorReferences = new HashMap<String, ActorRef>();
@@ -45,6 +50,7 @@ public class InjectableAkkaActors {
 						this.injectables, clazz ) );
 	}
 
+	@Override
 	@SuppressWarnings( "unchecked" )
 	public void initialize() throws InjectionException {
 		Collection<InjectableClass<?>> classes = this.actors.values();
@@ -71,6 +77,7 @@ public class InjectableAkkaActors {
 			actor( new CreationInfo( clazz ) );
 	}
 
+	@Override
 	public ActorRef actor( CreationInfo creationInfo ) {
 		String name = creationInfo.getName();
 		ActorRef actorRef = this.actorReferences.get( name );
@@ -81,6 +88,7 @@ public class InjectableAkkaActors {
 		return actorRef;
 	}
 
+	@Override
 	public ActorRef actor( ActorRefFactory actorRefFactory, CreationInfo creationInfo ) {
 		return newInstance( actorRefFactory, creationInfo.getTargetClass(), creationInfo.getName() );
 	}
@@ -95,15 +103,18 @@ public class InjectableAkkaActors {
 		return Props.create( creator );
 	}
 
+	@Override
 	public ActorRef actor( SearchInfo searchInfo ) {
 		return this.actorReferences.get( searchInfo.getPath() );
 	}
 
+	@Override
 	public ActorSelection actor( ActorRefFactory actorRefFactory, SearchInfo searchInfo ) {
 		return actorRefFactory.actorSelection( searchInfo.getPath() );
 	}
 
 	// TODO: improve to a graceful shutdown before shutdown actor system.
+	@Override
 	public void shutdown() {
 		FiniteDuration duration = Duration.create( 30, TimeUnit.SECONDS );
 		this.actorSystem.shutdown();

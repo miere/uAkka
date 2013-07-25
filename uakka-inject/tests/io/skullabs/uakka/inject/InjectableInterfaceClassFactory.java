@@ -1,5 +1,7 @@
 package io.skullabs.uakka.inject;
 
+import io.skullabs.uakka.api.AkkaConfiguration;
+
 import java.lang.reflect.Field;
 
 public class InjectableInterfaceClassFactory extends AbstractInjectableClassFactory<InjectableInterface> {
@@ -11,7 +13,7 @@ public class InjectableInterfaceClassFactory extends AbstractInjectableClassFact
 
 	@Override
 	public void initialize(
-			InjectionConfiguration configuration ) {
+			AkkaConfiguration configuration ) {
 	}
 
 	public static class DefaultInjectableInterface implements InjectableInterface {

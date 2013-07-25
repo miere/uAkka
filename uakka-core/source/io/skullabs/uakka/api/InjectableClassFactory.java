@@ -1,4 +1,4 @@
-package io.skullabs.uakka.inject;
+package io.skullabs.uakka.api;
 
 import java.lang.reflect.Field;
 
@@ -10,7 +10,7 @@ public interface InjectableClassFactory<T> {
 	 * 
 	 * @param configuration
 	 */
-	public abstract void initialize( InjectionConfiguration configuration );
+	public abstract void initialize( AkkaConfiguration configuration );
 
 	public abstract Object newInstance( Object instance, Field injectableField ) throws InjectionException;
 
