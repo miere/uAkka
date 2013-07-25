@@ -8,7 +8,7 @@
 		<artifactId>uakka-parent</artifactId>
 	</parent>
 	<artifactId>uakka-simple</artifactId>
-	<name>uAkka: Really Tiny and Simple Akka Implementation</name>
+	<name>uAkka: Really Tiny and Simple Actor Implementation</name>
 	<packaging>jar</packaging>
 
 	<licenses>

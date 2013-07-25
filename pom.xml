@@ -9,9 +9,11 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>uakka-core</module>
 		<module>uakka-simple</module>
 		<module>uakka-inject</module>
 		<module>uakka-servlet</module>
+		<module>uakka-service</module>
 	</modules>
 
 	<build>
