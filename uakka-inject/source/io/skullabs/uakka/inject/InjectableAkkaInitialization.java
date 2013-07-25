@@ -6,6 +6,9 @@ import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 import akka.actor.ActorSystem;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+
 @RequiredArgsConstructor
 public class InjectableAkkaInitialization {
 
@@ -24,10 +27,13 @@ public class InjectableAkkaInitialization {
 		Injectables injectables = injectableDiscoveryService.discovery( classes );
 		this.injectableAkkaActors = new InjectableAkkaActors( injectables, actorSystem );
 		configuration.setInjectableAkkaActors( this.injectableAkkaActors );
-		this.injectableAkkaActors.analise( classes );
+		this.injectableAkkaActors.analyze( classes );
 	}
 
 	private ActorSystem createActorSystem( InjectionConfiguration configuration ) {
-		return ActorSystem.create( configuration.toString() );
+		Config defaultConfig = ConfigFactory.load();
+		Config config = ConfigFactory.load( "META-INF/application" ).withFallback( defaultConfig );
+		configuration.setConfig( config );
+		return ActorSystem.create( configuration.toString(), config );
 	}
 }

@@ -8,6 +8,8 @@ import javax.servlet.ServletContext;
 import lombok.Delegate;
 import lombok.Getter;
 
+import com.typesafe.config.Config;
+
 public class ServletInjectionConfiguration implements InjectionConfiguration {
 
 	@Delegate
@@ -34,6 +36,16 @@ public class ServletInjectionConfiguration implements InjectionConfiguration {
 	@Override
 	public void setInjectableAkkaActors( InjectableAkkaActors injectableAkkaActors ) {
 		setAttribute( InjectableAkkaActors.class.getCanonicalName(), injectableAkkaActors );
+	}
+
+	@Override
+	public Config getConfig() {
+		return (Config)getAttribute( Config.class.getCanonicalName() );
+	}
+
+	@Override
+	public void setConfig( Config config ) {
+		setAttribute( Config.class.getCanonicalName(), config );
 	}
 
 	@Override

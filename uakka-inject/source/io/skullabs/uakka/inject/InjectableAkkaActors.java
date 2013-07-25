@@ -28,10 +28,21 @@ public class InjectableAkkaActors {
 	final Injectables injectables;
 	final ActorSystem actorSystem;
 
-	public void analise( Collection<Class<?>> classes ) throws InjectionException {
+	public void analyze( Collection<Class<?>> classes ) throws InjectionException {
 		for ( Class<?> clazz : classes )
-			if ( isActorClass( clazz ) )
-				memorizeInjectableActor( clazz );
+			analyzeClass( clazz );
+	}
+
+	private void analyzeClass( Class<?> clazz ) {
+		if ( isActorClass( clazz ) )
+			memorizeInjectableActor( clazz );
+	}
+
+	public void memorizeInjectableActor( Class<?> clazz ) {
+		this.actors.put(
+				clazz.getCanonicalName(),
+				InjectableClass.newInstance(
+						this.injectables, clazz ) );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -52,13 +63,6 @@ public class InjectableAkkaActors {
 				&& Actor.class.isAssignableFrom( clazz )
 				&& !clazz.getPackage().getName().startsWith( "akka." )
 				&& !clazz.getPackage().getName().equals( "akka" );
-	}
-
-	public void memorizeInjectableActor( Class<?> clazz ) {
-		this.actors.put(
-				clazz.getCanonicalName(),
-				InjectableClass.newInstance(
-						this.injectables, clazz ) );
 	}
 
 	private void tryInitializeActor( Class<? extends Actor> clazz ) throws InjectionException {
@@ -99,13 +103,9 @@ public class InjectableAkkaActors {
 		return actorRefFactory.actorSelection( searchInfo.getPath() );
 	}
 
-	// improve to a graceful shutdown before shutdown actor system.
+	// TODO: improve to a graceful shutdown before shutdown actor system.
 	public void shutdown() {
 		FiniteDuration duration = Duration.create( 30, TimeUnit.SECONDS );
-
-		// ask( actorSystem.actorSelection("*"), new PoisonPill() {}, 0 );
-		// actorSystem.actorSelection("/user/*") ;
-		// ! PoisonPill
 		this.actorSystem.shutdown();
 		this.actorSystem.awaitTermination( duration );
 	}
