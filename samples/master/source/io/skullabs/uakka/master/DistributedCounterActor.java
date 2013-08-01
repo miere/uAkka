@@ -12,12 +12,19 @@ public class DistributedCounterActor extends UntypedActor {
 	@Service( name = "sum", actor = CounterActor.class )
 	ActorRef counter;
 
-	@Reference( path = "akka.tcp://uakka-servlet-integration-slave@127.0.0.1:9002/user/slavecounter" )
+	@Reference( path = "akka.tcp://slave@127.0.0.1:9002/user/PersistenceDataActor" )
 	ActorSelection slaveCounter;
 
 	@Override
 	public void onReceive( Object message ) throws Exception {
 		this.counter.tell( message, getSender() );
 		this.slaveCounter.tell( message, getSender() );
+	}
+
+	@Override
+	public void postStop() throws Exception {
+		// TODO Auto-generated method stub
+		super.postStop();
+		System.out.println( "Stoping " + this );
 	}
 }

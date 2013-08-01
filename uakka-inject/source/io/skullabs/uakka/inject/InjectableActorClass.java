@@ -10,20 +10,20 @@ import java.util.Set;
 import lombok.Getter;
 
 @Getter
-public class InjectableClass<T> {
+public class InjectableActorClass {
 
 	Injectables injectables;
-	Class<T> targetClass;
+	Class<?> targetClass;
 	Set<InjectableField> fields;
 
-	public InjectableClass( Injectables injectables, Class<T> targetClass ) {
+	public InjectableActorClass( Injectables injectables, Class<?> targetClass ) {
 		this.injectables = injectables;
 		this.targetClass = targetClass;
 		this.fields = discoveryActorFields( targetClass );
 	}
 
-	public static <T> InjectableClass<T> newInstance( Injectables injectables, Class<T> targetClass ) {
-		return new InjectableClass<T>( injectables, targetClass );
+	public static InjectableActorClass newInstance( Injectables injectables, Class<?> targetClass ) {
+		return new InjectableActorClass( injectables, targetClass );
 	}
 
 	private Set<InjectableField> discoveryActorFields( Class<?> targetClass ) {
@@ -46,9 +46,9 @@ public class InjectableClass<T> {
 		}
 	}
 
-	public T newInstance() throws InjectionException {
+	public Object newInstance() throws InjectionException {
 		try {
-			T newInstance = newInstance( this.targetClass );
+			Object newInstance = newInstance( this.targetClass );
 			for ( InjectableField field : this.fields )
 				field.inject( newInstance );
 			return newInstance;
@@ -57,7 +57,7 @@ public class InjectableClass<T> {
 		}
 	}
 
-	public T newInstance( Class<T> targetClass ) throws InstantiationException, IllegalAccessException {
+	public Object newInstance( Class<?> targetClass ) throws InstantiationException, IllegalAccessException {
 		return targetClass.newInstance();
 	}
 }

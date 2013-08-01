@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class InjectablesTest {
 
-	InjectableClass<SampleHelloClass> handledInjectableClass;
+	InjectableActorClass handledInjectableClass;
 
 	@Before
 	public void setup() throws InjectionException {
@@ -24,12 +24,12 @@ public class InjectablesTest {
 				InjectableInterfaceClassFactory.class,
 				InjectableAnnotationClassFactory.class
 				) );
-		this.handledInjectableClass = InjectableClass.newInstance( injectables, SampleHelloClass.class );
+		this.handledInjectableClass = InjectableActorClass.newInstance( injectables, SampleHelloClass.class );
 	}
 
 	@Test
 	public void grantThatInjectThroughtInterface() throws InjectionException {
-		SampleHelloClass sampleHelloClass = this.handledInjectableClass.newInstance();
+		SampleHelloClass sampleHelloClass = (SampleHelloClass)this.handledInjectableClass.newInstance();
 		InjectableInterface injectableFromInterface = sampleHelloClass.getInjectableFromInterface();
 		assertNotNull( injectableFromInterface );
 		assertTrue( injectableFromInterface instanceof DefaultInjectableInterface );

@@ -9,5 +9,4 @@ public class SampleHelloClass {
 
 	@InjectableAnnotation
 	String injectableFromAnnotation;
-
 }

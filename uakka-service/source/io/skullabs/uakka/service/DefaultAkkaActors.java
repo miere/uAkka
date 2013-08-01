@@ -5,7 +5,7 @@ import io.skullabs.uakka.api.ActorInfo.SearchInfo;
 import io.skullabs.uakka.api.AkkaActors;
 import io.skullabs.uakka.api.InjectionException;
 import io.skullabs.uakka.api.Service;
-import io.skullabs.uakka.inject.InjectableClass;
+import io.skullabs.uakka.inject.InjectableActorClass;
 import io.skullabs.uakka.inject.Injectables;
 
 import java.lang.reflect.Modifier;
@@ -28,7 +28,7 @@ import akka.japi.Creator;
 @RequiredArgsConstructor
 public class DefaultAkkaActors implements AkkaActors {
 
-	final Map<String, InjectableClass<?>> actors = new HashMap<String, InjectableClass<?>>();
+	final Map<String, InjectableActorClass> actors = new HashMap<String, InjectableActorClass>();
 	final Map<String, ActorRef> actorReferences = new HashMap<String, ActorRef>();
 	final Injectables injectables;
 	final ActorSystem actorSystem;
@@ -39,23 +39,24 @@ public class DefaultAkkaActors implements AkkaActors {
 			analyzeClass( clazz );
 	}
 
+	@SuppressWarnings( "unchecked" )
 	private void analyzeClass( Class<?> clazz ) {
 		if ( isActorClass( clazz ) )
-			memorizeInjectableActor( clazz );
+			memorizeInjectableActor( (Class<? extends Actor>)clazz );
 	}
 
-	public void memorizeInjectableActor( Class<?> clazz ) {
+	public void memorizeInjectableActor( Class<? extends Actor> clazz ) {
 		this.actors.put(
 				clazz.getCanonicalName(),
-				InjectableClass.newInstance(
+				InjectableActorClass.newInstance(
 						this.injectables, clazz ) );
 	}
 
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public void initialize() throws InjectionException {
-		Collection<InjectableClass<?>> classes = this.actors.values();
-		for ( InjectableClass<?> injectableClazz : classes ) {
+		Collection<InjectableActorClass> classes = this.actors.values();
+		for ( InjectableActorClass injectableClazz : classes ) {
 			Class<?> clazz = injectableClazz.getTargetClass();
 			if ( isActorClass( clazz ) )
 				tryInitializeActor( (Class<? extends Actor>)clazz );
@@ -98,7 +99,7 @@ public class DefaultAkkaActors implements AkkaActors {
 	}
 
 	private Props createActorProps( String canonicalName ) {
-		InjectableClass<?> injectableClass = this.actors.get( canonicalName );
+		InjectableActorClass injectableClass = this.actors.get( canonicalName );
 		Creator<Actor> creator = new DefaultActorCreator( injectableClass );
 		return Props.create( creator );
 	}
