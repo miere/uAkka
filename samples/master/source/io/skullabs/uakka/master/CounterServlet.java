@@ -1,9 +1,10 @@
-package io.skullabs.uakka.servlet;
+package io.skullabs.uakka.master;
 
 import static akka.pattern.Patterns.ask;
 import io.skullabs.uakka.api.ActorInfo.SearchInfo;
 import io.skullabs.uakka.api.AkkaActors;
 import io.skullabs.uakka.api.AkkaConfiguration;
+import io.skullabs.uakka.servlet.ServletAkkaConfiguration;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

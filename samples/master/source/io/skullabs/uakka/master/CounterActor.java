@@ -1,4 +1,4 @@
-package io.skullabs.uakka.servlet;
+package io.skullabs.uakka.master;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

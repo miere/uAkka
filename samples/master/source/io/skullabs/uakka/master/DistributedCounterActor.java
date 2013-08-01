@@ -1,4 +1,4 @@
-package io.skullabs.uakka.servlet;
+package io.skullabs.uakka.master;
 
 import io.skullabs.uakka.api.Reference;
 import io.skullabs.uakka.api.Service;
