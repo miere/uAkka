@@ -8,7 +8,7 @@
 		<artifactId>uakka-parent</artifactId>
 	</parent>
 
-	<artifactId>uakka-servlet-integration-test</artifactId>
+	<artifactId>slave</artifactId>
 	<name>uAkka: Servlet Integration Test</name>
 	<packaging>war</packaging>
 

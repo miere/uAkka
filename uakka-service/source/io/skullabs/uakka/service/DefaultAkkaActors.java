@@ -33,6 +33,7 @@ public class DefaultAkkaActors implements AkkaActors {
 	final Injectables injectables;
 	final ActorSystem actorSystem;
 
+	@Override
 	public void analyze( Collection<Class<?>> classes ) throws InjectionException {
 		for ( Class<?> clazz : classes )
 			analyzeClass( clazz );
@@ -79,22 +80,21 @@ public class DefaultAkkaActors implements AkkaActors {
 
 	@Override
 	public ActorRef actor( CreationInfo creationInfo ) {
-		String name = creationInfo.getName();
-		ActorRef actorRef = this.actorReferences.get( name );
-		if ( actorRef == null ) {
-			actorRef = actor( this.actorSystem, creationInfo );
-			this.actorReferences.put( name, actorRef );
-		}
-		return actorRef;
+		return actor( this.actorSystem, creationInfo );
 	}
 
 	@Override
 	public ActorRef actor( ActorRefFactory actorRefFactory, CreationInfo creationInfo ) {
-		return newInstance( actorRefFactory, creationInfo.getTargetClass(), creationInfo.getName() );
+		return actor( actorRefFactory, creationInfo.getTargetClass(), creationInfo.getName() );
 	}
 
-	private ActorRef newInstance( ActorRefFactory actorRefFactory, Class<? extends Actor> clazz, String name ) {
-		return actorRefFactory.actorOf( createActorProps( clazz.getCanonicalName() ), name );
+	private ActorRef actor( ActorRefFactory actorRefFactory, Class<? extends Actor> clazz, String name ) {
+		ActorRef actorRef = this.actorReferences.get( name );
+		if ( actorRef == null ) {
+			actorRef = actorRefFactory.actorOf( createActorProps( clazz.getCanonicalName() ), name );
+			this.actorReferences.put( name, actorRef );
+		}
+		return actorRef;
 	}
 
 	private Props createActorProps( String canonicalName ) {
@@ -110,7 +110,8 @@ public class DefaultAkkaActors implements AkkaActors {
 
 	@Override
 	public ActorSelection actor( ActorRefFactory actorRefFactory, SearchInfo searchInfo ) {
-		return actorRefFactory.actorSelection( searchInfo.getPath() );
+		ActorSelection actorSelection = actorRefFactory.actorSelection( searchInfo.getPath() );
+		return actorSelection;
 	}
 
 	// TODO: improve to a graceful shutdown before shutdown actor system.

@@ -13,7 +13,7 @@ public interface AkkaActors {
 
 	public abstract void initialize() throws InjectionException;
 
-	public abstract ActorRef actor( CreationInfo creationInfo );
+	public ActorRef actor( CreationInfo creationInfo );
 
 	public abstract ActorRef actor( ActorRefFactory actorRefFactory, CreationInfo creationInfo );
 

@@ -50,7 +50,11 @@ public class ServletAkkaConfiguration implements AkkaConfiguration {
 
 	@Override
 	public String toString() {
-		return getIdentificator();
+		String identificator = getIdentificator();
+		if ( identificator == null
+				|| identificator.isEmpty()
+				|| identificator.equals( "/" ) )
+			identificator = "root";
+		return identificator;
 	}
-
 }

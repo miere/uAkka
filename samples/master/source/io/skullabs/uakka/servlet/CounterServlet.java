@@ -4,10 +4,10 @@ import static akka.pattern.Patterns.ask;
 import io.skullabs.uakka.api.ActorInfo.SearchInfo;
 import io.skullabs.uakka.api.AkkaActors;
 import io.skullabs.uakka.api.AkkaConfiguration;
-import io.skullabs.uakka.servlet.DistributedCounterActor.CountMessage;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,14 +42,19 @@ public class CounterServlet extends HttpServlet {
 
 	@Override
 	protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-		FiniteDuration duration = Duration.create( 5, TimeUnit.SECONDS );
-		final Timeout timeout = new Timeout( duration );
-		Future<Object> futureResponse = ask( this.distrCounterActor, new CountMessage(), timeout );
+
 		try {
-			Object result = Await.result( futureResponse, duration );
+			Object result = askAndWait( new AtomicInteger( 0 ) );
 			response.getWriter().write( result.toString() );
 		} catch ( Exception e ) {
 			throw new ServletException( e );
 		}
+	}
+
+	private Object askAndWait( Object message ) throws Exception {
+		FiniteDuration duration = Duration.create( 5, TimeUnit.SECONDS );
+		final Timeout timeout = new Timeout( duration );
+		Future<Object> futureResponse = ask( this.distrCounterActor, message, timeout );
+		return Await.result( futureResponse, duration );
 	}
 }

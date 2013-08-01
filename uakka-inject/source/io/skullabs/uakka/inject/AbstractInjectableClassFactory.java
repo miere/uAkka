@@ -1,5 +1,6 @@
 package io.skullabs.uakka.inject;
 
+import io.skullabs.uakka.api.AkkaActors;
 import io.skullabs.uakka.api.AkkaConfiguration;
 import io.skullabs.uakka.api.InjectableClassFactory;
 import io.skullabs.uakka.api.InjectionException;
@@ -13,6 +14,7 @@ public abstract class AbstractInjectableClassFactory<T> implements InjectableCla
 
 	@Getter
 	AkkaConfiguration configuration;
+	AkkaActors akkaActors;
 
 	@Override
 	public void initialize( AkkaConfiguration configuration ) {
@@ -35,5 +37,11 @@ public abstract class AbstractInjectableClassFactory<T> implements InjectableCla
 	public Class<T> getGenericClass() {
 		return (Class<T>)( (ParameterizedType)getClass().getGenericSuperclass() )
 				.getActualTypeArguments()[0];
+	}
+
+	public AkkaActors getAkkaActors() {
+		if ( this.akkaActors == null )
+			this.akkaActors = this.getConfiguration().getAkkaActors();
+		return this.akkaActors;
 	}
 }

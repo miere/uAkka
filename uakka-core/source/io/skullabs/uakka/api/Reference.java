@@ -13,6 +13,6 @@ public @interface Reference {
 
 	String path() default "";
 
-	Class<? extends Actor> actor();
+	Class<? extends Actor> actor() default Actor.class;
 
 }

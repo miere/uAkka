@@ -13,6 +13,8 @@ public @interface Service {
 
 	String value() default "";
 
+	String name() default "";
+
 	Class<? extends Actor> actor() default Actor.class;
 
 }

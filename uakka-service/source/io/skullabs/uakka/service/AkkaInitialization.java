@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import akka.actor.ActorSystem;
 
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException.Missing;
 import com.typesafe.config.ConfigFactory;
 
 @RequiredArgsConstructor
@@ -37,9 +38,20 @@ public class AkkaInitialization {
 	}
 
 	private ActorSystem createActorSystem( AkkaConfiguration configuration ) {
+		String applicationName = configuration.toString();
 		Config defaultConfig = ConfigFactory.load();
-		Config config = ConfigFactory.load( "META-INF/application" ).withFallback( defaultConfig );
+		Config config = readConfig( applicationName, defaultConfig );
 		configuration.setConfig( config );
-		return ActorSystem.create( configuration.toString(), config );
+		return ActorSystem.create( applicationName, config );
+	}
+
+	private Config readConfig( String applicationName, Config defaultConfig ) {
+		String configFile = System.getProperty( "uakka.configFile", "META-INF/application" );
+		Config readConfig = ConfigFactory.load( configFile ).withFallback( defaultConfig );
+		try {
+			return readConfig.getConfig( applicationName );
+		} catch ( Missing e ) {
+			return readConfig;
+		}
 	}
 }

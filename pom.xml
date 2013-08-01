@@ -14,6 +14,8 @@
 		<module>uakka-inject</module>
 		<module>uakka-servlet</module>
 		<module>uakka-service</module>
+		<module>samples/master</module>
+		<module>samples/slave</module>
 	</modules>
 
 	<build>
@@ -50,6 +52,7 @@
 					</webResources>
 				</configuration>
 			</plugin>
+			
 		</plugins>
 	</build>
 </project>
