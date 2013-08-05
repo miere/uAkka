@@ -2,7 +2,7 @@ package io.skullabs.uakka.inject;
 
 import io.skullabs.uakka.api.AkkaConfiguration;
 import io.skullabs.uakka.api.InjectableClassFactory;
-import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.exception.InjectionException;
 
 import java.lang.reflect.Modifier;
 import java.util.Collection;

@@ -3,7 +3,7 @@ package io.skullabs.uakka.servlet;
 import io.skullabs.uakka.api.AkkaActors;
 import io.skullabs.uakka.api.AkkaConfiguration;
 import io.skullabs.uakka.api.InjectableClassFactory;
-import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.service.AkkaInitialization;
 
 import java.util.Set;

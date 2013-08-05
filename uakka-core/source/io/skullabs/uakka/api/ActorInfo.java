@@ -1,5 +1,6 @@
 package io.skullabs.uakka.api;
 
+import io.skullabs.uakka.api.exception.InjectionException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

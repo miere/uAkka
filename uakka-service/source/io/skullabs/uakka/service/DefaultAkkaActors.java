@@ -2,8 +2,8 @@ package io.skullabs.uakka.service;
 
 import io.skullabs.uakka.api.ActorInfo.CreationInfo;
 import io.skullabs.uakka.api.ActorInfo.SearchInfo;
+import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.api.AkkaActors;
-import io.skullabs.uakka.api.InjectionException;
 import io.skullabs.uakka.api.Service;
 import io.skullabs.uakka.inject.InjectableActorClass;
 import io.skullabs.uakka.inject.Injectables;

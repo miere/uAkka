@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.inject.InjectableInterfaceClassFactory.DefaultInjectableInterface;
 
 import java.util.Collection;

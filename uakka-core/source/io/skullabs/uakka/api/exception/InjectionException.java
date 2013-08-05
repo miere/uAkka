@@ -1,6 +1,6 @@
-package io.skullabs.uakka.api;
+package io.skullabs.uakka.api.exception;
 
-public class InjectionException extends Exception {
+public class InjectionException extends UAkkaException {
 
 	public InjectionException( String message, Exception cause ) {
 		super( message, cause );

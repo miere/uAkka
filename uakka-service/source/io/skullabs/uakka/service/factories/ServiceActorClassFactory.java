@@ -3,7 +3,7 @@ package io.skullabs.uakka.service.factories;
 import static io.skullabs.uakka.service.factories.Assert.assertFieldTypeIsActorRef;
 import static io.skullabs.uakka.service.factories.Assert.assertInstanceOfActor;
 import io.skullabs.uakka.api.ActorInfo.CreationInfo;
-import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.api.Service;
 import io.skullabs.uakka.inject.AbstractInjectableClassFactory;
 import io.skullabs.uakka.service.actor.WrappedActorRef;

@@ -1,6 +1,6 @@
 package io.skullabs.uakka.service.factories;
 
-import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.exception.InjectionException;
 
 import java.lang.reflect.Field;
 

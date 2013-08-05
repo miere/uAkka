@@ -2,7 +2,7 @@ package io.skullabs.uakka.service;
 
 import io.skullabs.uakka.api.AkkaActors;
 import io.skullabs.uakka.api.AkkaConfiguration;
-import io.skullabs.uakka.api.InjectionException;
+import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.inject.InjectableDiscoveryService;
 import io.skullabs.uakka.inject.Injectables;
 

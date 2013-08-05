@@ -2,6 +2,7 @@ package io.skullabs.uakka.api;
 
 import io.skullabs.uakka.api.ActorInfo.CreationInfo;
 import io.skullabs.uakka.api.ActorInfo.SearchInfo;
+import io.skullabs.uakka.api.exception.InjectionException;
 
 import java.util.Collection;
 
