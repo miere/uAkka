@@ -11,11 +11,28 @@ public class HandledActor extends UntypedActor {
 	@Override
 	public void onReceive( Object message ) throws Exception {
 		try {
-			handledMethods.runHandlerMethodFor( message );
+			beforeMessage();
+			this.handledMethods.runHandlerMethodFor( message );
 		} catch ( UnhandledMessageException e ) {
 			unhandled( message );
 		} catch ( MethodHandlerException e ) {
 			throw (Exception)e.getCause();
+		} finally {
+			afterMessage();
 		}
+	}
+
+	/**
+	 * A convenient method to be overridden by developers to run something
+	 * before every arrived message.
+	 */
+	public void beforeMessage() {
+	}
+
+	/**
+	 * A convenient method to be overridden by developers to run something after
+	 * every arrived message.
+	 */
+	public void afterMessage() {
 	}
 }
