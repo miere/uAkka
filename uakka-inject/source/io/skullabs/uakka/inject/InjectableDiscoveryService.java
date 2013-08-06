@@ -2,6 +2,7 @@ package io.skullabs.uakka.inject;
 
 import io.skullabs.uakka.api.AkkaConfiguration;
 import io.skullabs.uakka.api.InjectableClassFactory;
+import io.skullabs.uakka.api.Injectables;
 import io.skullabs.uakka.api.exception.InjectionException;
 
 import java.lang.reflect.Modifier;
@@ -19,7 +20,7 @@ public class InjectableDiscoveryService {
 
 	public Injectables discovery( Collection<Class<?>> classes ) throws InjectionException {
 		analize( classes );
-		return new Injectables( this.classFactories );
+		return new DefaultInjectables( this.classFactories );
 	}
 
 	public void analize( Collection<Class<?>> classes ) throws InjectionException {

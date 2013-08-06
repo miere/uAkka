@@ -1,5 +1,6 @@
 package io.skullabs.uakka.jpa;
 
+import static io.skullabs.uakka.commons.Commons.str;
 import io.skullabs.uakka.api.AkkaConfiguration;
 import io.skullabs.uakka.servlet.ServletAkkaConfiguration;
 
@@ -11,7 +12,10 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import lombok.extern.java.Log;
+
 @WebListener
+@Log
 public class EntityManagerFactoryCloser implements ServletContextListener {
 
 	@Override
@@ -34,6 +38,7 @@ public class EntityManagerFactoryCloser implements ServletContextListener {
 	}
 
 	void close( EntityManagerFactory entityManagerFactory ) {
+		log.info( str( "Closing %s", entityManagerFactory ) );
 		entityManagerFactory.close();
 	}
 }

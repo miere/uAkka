@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.java.Log;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
@@ -24,6 +25,7 @@ import akka.actor.ActorRef;
 import akka.util.Timeout;
 
 @WebServlet( "/count" )
+@Log
 public class CounterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 4962279871466216133L;
@@ -33,7 +35,7 @@ public class CounterServlet extends HttpServlet {
 	public void init() throws ServletException {
 		AkkaActors akkaActors = getInjectableAkkaActors();
 		this.distrCounterActor = akkaActors.actor( new SearchInfo( DistributedCounterActor.class ) );
-		System.out.println( "CounterServlet initialized!" );
+		log.info( "CounterServlet initialized!" );
 	}
 
 	private AkkaActors getInjectableAkkaActors() {

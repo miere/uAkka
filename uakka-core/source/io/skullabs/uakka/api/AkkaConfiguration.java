@@ -16,4 +16,8 @@ public interface AkkaConfiguration {
 
 	public Config getConfig();
 
+	public void setInjectables( Injectables injectables );
+
+	public Injectables getInjectables();
+
 }

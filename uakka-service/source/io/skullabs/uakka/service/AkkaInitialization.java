@@ -2,9 +2,9 @@ package io.skullabs.uakka.service;
 
 import io.skullabs.uakka.api.AkkaActors;
 import io.skullabs.uakka.api.AkkaConfiguration;
+import io.skullabs.uakka.api.Injectables;
 import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.inject.InjectableDiscoveryService;
-import io.skullabs.uakka.inject.Injectables;
 
 import java.util.Set;
 
@@ -32,6 +32,7 @@ public class AkkaInitialization {
 		ActorSystem actorSystem = createActorSystem( configuration );
 		InjectableDiscoveryService injectableDiscoveryService = new InjectableDiscoveryService( configuration );
 		Injectables injectables = injectableDiscoveryService.discovery( classes );
+		configuration.setInjectables( injectables );
 		this.akkaActors = new DefaultAkkaActors( injectables, actorSystem );
 		configuration.setAkkaActors( this.akkaActors );
 		this.akkaActors.analyze( classes );

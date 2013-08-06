@@ -9,6 +9,7 @@ import java.util.Collection;
 import akka.actor.ActorRef;
 import akka.actor.ActorRefFactory;
 import akka.actor.ActorSelection;
+import akka.actor.ActorSystem;
 
 public interface AkkaActors {
 
@@ -25,5 +26,7 @@ public interface AkkaActors {
 	public abstract void shutdown();
 
 	public abstract void analyze( Collection<Class<?>> classes ) throws InjectionException;
+
+	public ActorSystem getActorSystem();
 
 }

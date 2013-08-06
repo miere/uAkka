@@ -16,22 +16,32 @@ public class HandledActor extends UntypedActor {
 		} catch ( UnhandledMessageException e ) {
 			unhandled( message );
 		} catch ( MethodHandlerException e ) {
-			throw (Exception)e.getCause();
+			onFail( e );
 		} finally {
 			afterMessage();
 		}
 	}
 
 	/**
-	 * A convenient method to be overridden by developers to run something
-	 * before every arrived message.
+	 * Handles failures handling messages
+	 * 
+	 * @param e
+	 * @throws Exception
+	 */
+	public void onFail( MethodHandlerException e ) throws Exception {
+		throw (Exception)e.getCause();
+	}
+
+	/**
+	 * Event dispatched before a message arrive. A convenient method to be
+	 * overridden by developers to run something before every arrived message.
 	 */
 	public void beforeMessage() {
 	}
 
 	/**
-	 * A convenient method to be overridden by developers to run something after
-	 * every arrived message.
+	 * Event dispatched after a message arrive. A convenient method to be
+	 * overridden by developers to run something after every arrived message.
 	 */
 	public void afterMessage() {
 	}

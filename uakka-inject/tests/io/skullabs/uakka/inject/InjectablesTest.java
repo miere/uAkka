@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import io.skullabs.uakka.api.Injectables;
 import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.inject.InjectableInterfaceClassFactory.DefaultInjectableInterface;
 
@@ -15,7 +16,7 @@ import org.junit.Test;
 
 public class InjectablesTest {
 
-	InjectableActorClass handledInjectableClass;
+	HandledInjectableClass handledInjectableClass;
 
 	@Before
 	public void setup() throws InjectionException {
@@ -24,7 +25,7 @@ public class InjectablesTest {
 				InjectableInterfaceClassFactory.class,
 				InjectableAnnotationClassFactory.class
 				) );
-		this.handledInjectableClass = InjectableActorClass.newInstance( injectables, SampleHelloClass.class );
+		this.handledInjectableClass = HandledInjectableClass.newInstance( injectables, SampleHelloClass.class );
 	}
 
 	@Test

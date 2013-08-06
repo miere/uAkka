@@ -1,6 +1,7 @@
 package io.skullabs.uakka.inject;
 
 import io.skullabs.uakka.api.InjectableClassFactory;
+import io.skullabs.uakka.api.Injectables;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -10,10 +11,11 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class Injectables {
+public class DefaultInjectables implements Injectables {
 
 	final Map<String, InjectableClassFactory<?>> classFactories;
 
+	@Override
 	public InjectableClassFactory<?> getClassFactory( Field field ) {
 		Class<?> fieldClass = field.getType();
 		InjectableClassFactory<?> classFactory = getClassFactory( fieldClass.getCanonicalName() );
@@ -26,6 +28,7 @@ public class Injectables {
 		return classFactory;
 	}
 
+	@Override
 	public InjectableClassFactory<?> getClassFactory( String canonicalName ) {
 		InjectableClassFactory<?> classFactory = null;
 		Set<String> keySet = this.classFactories.keySet();

@@ -2,11 +2,11 @@ package io.skullabs.uakka.service;
 
 import io.skullabs.uakka.api.ActorInfo.CreationInfo;
 import io.skullabs.uakka.api.ActorInfo.SearchInfo;
-import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.api.AkkaActors;
+import io.skullabs.uakka.api.Injectables;
 import io.skullabs.uakka.api.Service;
-import io.skullabs.uakka.inject.InjectableActorClass;
-import io.skullabs.uakka.inject.Injectables;
+import io.skullabs.uakka.api.exception.InjectionException;
+import io.skullabs.uakka.inject.HandledInjectableClass;
 
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
@@ -25,10 +26,11 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.japi.Creator;
 
+@Getter
 @RequiredArgsConstructor
 public class DefaultAkkaActors implements AkkaActors {
 
-	final Map<String, InjectableActorClass> actors = new HashMap<String, InjectableActorClass>();
+	final Map<String, HandledInjectableClass> actors = new HashMap<String, HandledInjectableClass>();
 	final Map<String, ActorRef> actorReferences = new HashMap<String, ActorRef>();
 	final Injectables injectables;
 	final ActorSystem actorSystem;
@@ -48,15 +50,15 @@ public class DefaultAkkaActors implements AkkaActors {
 	public void memorizeInjectableActor( Class<? extends Actor> clazz ) {
 		this.actors.put(
 				clazz.getCanonicalName(),
-				InjectableActorClass.newInstance(
+				HandledInjectableClass.newInstance(
 						this.injectables, clazz ) );
 	}
 
 	@Override
 	@SuppressWarnings( "unchecked" )
 	public void initialize() throws InjectionException {
-		Collection<InjectableActorClass> classes = this.actors.values();
-		for ( InjectableActorClass injectableClazz : classes ) {
+		Collection<HandledInjectableClass> classes = this.actors.values();
+		for ( HandledInjectableClass injectableClazz : classes ) {
 			Class<?> clazz = injectableClazz.getTargetClass();
 			if ( isActorClass( clazz ) )
 				tryInitializeActor( (Class<? extends Actor>)clazz );
@@ -99,7 +101,7 @@ public class DefaultAkkaActors implements AkkaActors {
 	}
 
 	private Props createActorProps( String canonicalName ) {
-		InjectableActorClass injectableClass = this.actors.get( canonicalName );
+		HandledInjectableClass injectableClass = this.actors.get( canonicalName );
 		Creator<Actor> creator = new DefaultActorCreator( injectableClass );
 		return Props.create( creator );
 	}

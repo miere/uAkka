@@ -1,6 +1,7 @@
 package io.skullabs.uakka.inject;
 
 import io.skullabs.uakka.api.InjectableClassFactory;
+import io.skullabs.uakka.api.Injectables;
 import io.skullabs.uakka.api.exception.InjectionException;
 
 import java.lang.reflect.Field;
@@ -10,20 +11,20 @@ import java.util.Set;
 import lombok.Getter;
 
 @Getter
-public class InjectableActorClass {
+public class HandledInjectableClass {
 
 	Injectables injectables;
 	Class<?> targetClass;
 	Set<InjectableField> fields;
 
-	public InjectableActorClass( Injectables injectables, Class<?> targetClass ) {
+	public HandledInjectableClass( Injectables injectables, Class<?> targetClass ) {
 		this.injectables = injectables;
 		this.targetClass = targetClass;
 		this.fields = discoveryActorFields( targetClass );
 	}
 
-	public static InjectableActorClass newInstance( Injectables injectables, Class<?> targetClass ) {
-		return new InjectableActorClass( injectables, targetClass );
+	public static HandledInjectableClass newInstance( Injectables injectables, Class<?> targetClass ) {
+		return new HandledInjectableClass( injectables, targetClass );
 	}
 
 	private Set<InjectableField> discoveryActorFields( Class<?> targetClass ) {
