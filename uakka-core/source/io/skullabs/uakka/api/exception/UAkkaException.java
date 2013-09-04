@@ -9,8 +9,8 @@ public class UAkkaException extends Exception {
 		super( message, cause );
 	}
 
-	public UAkkaException( Exception e ) {
-		super( e );
+	public UAkkaException( Throwable throwable ) {
+		super( throwable );
 	}
 
 	public UAkkaException( String string ) {

@@ -45,7 +45,6 @@ public class CounterServlet extends HttpServlet {
 
 	@Override
 	protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-
 		try {
 			Object result = askAndWait( new AtomicInteger( 0 ) );
 			response.getWriter().write( result.toString() );

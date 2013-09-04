@@ -4,6 +4,7 @@ import static io.skullabs.uakka.commons.Commons.str;
 import io.skullabs.uakka.api.exception.MethodHandlerException;
 import io.skullabs.uakka.api.exception.UnhandledMessageException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,15 +49,18 @@ public class MethodHandler {
 	}
 
 	private void memorize( Method method, Class<?> handledMessageType ) {
+		method.setAccessible( true );
 		this.methods.put( handledMessageType.getCanonicalName(), method );
 	}
 
-	public void runHandlerMethodFor( Object message ) throws MethodHandlerException {
+	public Object runHandlerMethodFor( Object message ) throws MethodHandlerException {
 		Method method = this.methods.get( message.getClass().getCanonicalName() );
 		if ( method == null )
 			throw new UnhandledMessageException();
 		try {
-			method.invoke( this.handledObject, message );
+			return method.invoke( this.handledObject, message );
+		} catch ( InvocationTargetException e ) {
+			throw new MethodHandlerException( e.getCause() );
 		} catch ( Exception e ) {
 			throw new MethodHandlerException( e );
 		}

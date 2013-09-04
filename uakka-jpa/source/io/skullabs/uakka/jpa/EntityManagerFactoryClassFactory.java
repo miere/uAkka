@@ -1,5 +1,6 @@
 package io.skullabs.uakka.jpa;
 
+import static io.skullabs.uakka.commons.Commons.str;
 import io.skullabs.uakka.api.exception.InjectionException;
 import io.skullabs.uakka.inject.AbstractInjectableClassFactory;
 
@@ -11,25 +12,40 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 
+import lombok.Synchronized;
+import lombok.extern.java.Log;
+
+@Log
 public class EntityManagerFactoryClassFactory extends AbstractInjectableClassFactory<PersistenceUnit> {
 
 	static final String FACTORIES = EntityManagerFactoryClassFactory.class.getCanonicalName() + ".FACTORIES";
 
-	Map<String, EntityManagerFactory> factories = new HashMap<String, EntityManagerFactory>();
+	Map<String, EntityManagerFactory> factories;
 
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public void initialize() {
-		getConfiguration().setAttribute( FACTORIES, this.factories );
+		this.factories = (Map<String, EntityManagerFactory>)getConfiguration().getAttribute( FACTORIES );
+		if ( getConfiguration().getAttribute( FACTORIES ) == null ) {
+			this.factories = new HashMap<String, EntityManagerFactory>();
+			getConfiguration().setAttribute( FACTORIES, this.factories );
+		}
 	}
 
+	@Synchronized
 	@Override
 	public Object newInstance( Object instance, Field injectableField ) throws InjectionException {
 		String persistUnitName = extractPersistenceUnitName( injectableField );
 		EntityManagerFactory factory = this.factories.get( persistUnitName );
-		if ( factory == null ) {
-			factory = Persistence.createEntityManagerFactory( persistUnitName );
-			this.factories.put( persistUnitName, factory );
-		}
+		if ( factory == null )
+			factory = createAndMemorizeFactory( persistUnitName );
+		return factory;
+	}
+
+	EntityManagerFactory createAndMemorizeFactory( String persistUnitName ) {
+		EntityManagerFactory factory = Persistence.createEntityManagerFactory( persistUnitName );
+		this.factories.put( persistUnitName, factory );
+		log.info( str( "Creating Entity Manager Factory( persistUnitName=\"%s\" )", persistUnitName ) );
 		return factory;
 	}
 
