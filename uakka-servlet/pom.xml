@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>io.skullabs.uakka</groupId>
+		<groupId>com.texoit.uakka</groupId>
 		<version>1.0-SNAPSHOT</version>
 		<artifactId>uakka-parent</artifactId>
 	</parent>
