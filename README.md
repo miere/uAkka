@@ -1,5 +1,5 @@
 # uAkka
-[![Build Status](https://travis-ci.org/SkullLabs/uAkka.png?branch=master)](https://travis-ci.org/SkullLabs/uAkka)
+[![Build Status](https://travis-ci.org/TeXOLabs/uAkka.png?branch=master)](https://travis-ci.org/TeXOLabs/uAkka)
 Really tiny Akka utilities and simulators. It intends to:
 - Provide a lightweight environment for distributed processing with Akka
 - Provide application server agnostic implemention for Java and Scala development
@@ -8,6 +8,8 @@ Really tiny Akka utilities and simulators. It intends to:
 
 *PS:* It stills on earlier development
 
+Here you can find a [Basic Usage Sample](https://gist.github.com/miere/6576335).
+
 # Licence
-Layr framework is distributed under [Apache 2 licence](http://www.apache.org/licenses/LICENSE-2.0.html).
+uAkka framework is distributed under [Apache 2 licence](http://www.apache.org/licenses/LICENSE-2.0.html).
 
