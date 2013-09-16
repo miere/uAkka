@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 import akka.actor.Actor;
@@ -28,6 +29,7 @@ import akka.japi.Creator;
 
 @Getter
 @RequiredArgsConstructor
+@Log
 public class DefaultAkkaActors implements AkkaActors {
 
 	final Map<String, HandledInjectableClass> actors = new HashMap<String, HandledInjectableClass>();
@@ -83,6 +85,7 @@ public class DefaultAkkaActors implements AkkaActors {
 
 	@Override
 	public ActorRef actor( CreationInfo creationInfo ) {
+		log.info( String.format( "Creating actor %s", creationInfo.getTargetClass() ) );
 		return actor( this.actorSystem, creationInfo );
 	}
 

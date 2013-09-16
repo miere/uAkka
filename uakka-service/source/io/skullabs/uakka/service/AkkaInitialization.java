@@ -10,12 +10,14 @@ import java.util.Set;
 
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import akka.actor.ActorSystem;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException.Missing;
 import com.typesafe.config.ConfigFactory;
 
+@Log
 @RequiredArgsConstructor
 public class AkkaInitialization {
 
@@ -43,6 +45,7 @@ public class AkkaInitialization {
 		Config defaultConfig = ConfigFactory.load();
 		Config config = readConfig( applicationName, defaultConfig );
 		configuration.setConfig( config );
+		log.info( "Creating ActorSystem for " + applicationName );
 		return ActorSystem.create( applicationName, config );
 	}
 
