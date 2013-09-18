@@ -132,8 +132,8 @@ public class AkkaStandaloneRunnerMojo extends AbstractMojo {
 
 	Artifact getUAkkaStandalone() {
 		return this.factory.createDependencyArtifact(
-				this.project.getGroupId(), "uakka-standalone",
-				VersionRange.createFromVersion( this.project.getVersion() ), "jar", "", Artifact.SCOPE_RUNTIME );
+				this.plugin.getGroupId(), "uakka-standalone",
+				VersionRange.createFromVersion( this.plugin.getVersion() ), "jar", "", Artifact.SCOPE_RUNTIME );
 	}
 
 	String getFinalArtifactName() {
