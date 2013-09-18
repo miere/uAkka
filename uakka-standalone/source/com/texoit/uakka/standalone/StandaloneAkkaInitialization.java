@@ -33,6 +33,10 @@ public class StandaloneAkkaInitialization {
 	}
 
 	public static void main( String[] args ) throws InjectionException, ClassNotFoundException, IOException {
+		if ( args.length < 1 ){
+			System.out.println("Missing application name parameter.");
+			return;
+		}
 		new StandaloneAkkaInitialization( args[0] ).initialize();
 	}
 
