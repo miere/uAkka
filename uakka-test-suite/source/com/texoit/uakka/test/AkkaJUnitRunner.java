@@ -1,5 +1,13 @@
 package com.texoit.uakka.test;
 
+import static com.texoit.uakka.commons.Commons.list;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executors;
+
+import lombok.AllArgsConstructor;
+
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
@@ -7,6 +15,8 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 import com.texoit.uakka.inject.HandledInjectableClass;
+import com.texoit.uakka.service.factories.ReferenceActorClassFactory;
+import com.texoit.uakka.service.factories.ServiceActorClassFactory;
 import com.texoit.uakka.standalone.StandaloneUAkka;
 
 public class AkkaJUnitRunner extends Runner {
@@ -24,11 +34,27 @@ public class AkkaJUnitRunner extends Runner {
 	void initializeUAkka() throws InitializationError {
 		try {
 			String name = this.targetClass.getSimpleName();
-			standalone = new StandaloneUAkka(name);
+			standalone = createStandaloneUAkka(name);
 			standalone.initialize();
 		} catch ( Exception cause ) {
 			throw new InitializationError(cause);
 		}
+	}
+
+	StandaloneUAkka createStandaloneUAkka(String name) {
+		StandaloneUAkka standaloneUAkka = new StandaloneUAkka(name);
+		standaloneUAkka.setKnownAvailableClasses(retrieveKnownAvailableClasses());
+		return standaloneUAkka;
+	}
+
+	@SuppressWarnings("unchecked")
+	Set<Class<?>> retrieveKnownAvailableClasses(){
+		Set<Class<?>> classes = new HashSet<Class<?>>();
+		classes.addAll(list(
+				ServiceActorClassFactory.class,
+				ReferenceActorClassFactory.class
+			));
+		return classes;
 	}
 
 	@Override
@@ -38,8 +64,9 @@ public class AkkaJUnitRunner extends Runner {
 
 	@Override
 	public void run(RunNotifier notifier) {
-		classRunner.run(notifier);
-		standalone.shutdown();
+		AsynchronousClassRunner asynchronousClassRunner = new AsynchronousClassRunner(classRunner, notifier, standalone);
+		Executors.newSingleThreadExecutor().submit(asynchronousClassRunner);
+		standalone.awaitTermination();
 	}
 
 	public static class InjectableBlockJUnit4ClassRunner extends BlockJUnit4ClassRunner {
@@ -57,7 +84,23 @@ public class AkkaJUnitRunner extends Runner {
 		protected Object createTest() throws Exception {
 			HandledInjectableClass injectableClass = new HandledInjectableClass(
 					standalone.getInjectables(), targetClass);
-			return injectableClass.newInstance();
+			Object newInstance = injectableClass.newInstance();
+			System.out.println("created test: " + newInstance);
+			return newInstance;
+		}
+	}
+
+	@AllArgsConstructor
+	public static class AsynchronousClassRunner implements Runnable {
+
+		BlockJUnit4ClassRunner classRunner;
+		RunNotifier notifier;
+		StandaloneUAkka standalone;
+
+		@Override
+		public void run() {
+			classRunner.run(notifier);
+			standalone.shutdown();
 		}
 	}
 }

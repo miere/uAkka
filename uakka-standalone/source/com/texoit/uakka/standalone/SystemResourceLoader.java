@@ -83,6 +83,7 @@ public class SystemResourceLoader {
 
 		for ( File file : listOfFiles ) {
 			String fileName = path + "/" + file.getName();
+//			System.out.println(fileName);
 			if ( file.isDirectory() )
 				list.addAll( retrieveAvailableResources( file, fileName ) );
 			else
