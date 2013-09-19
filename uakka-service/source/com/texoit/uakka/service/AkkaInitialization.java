@@ -3,6 +3,7 @@ package com.texoit.uakka.service;
 import java.util.Set;
 
 import lombok.Delegate;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import akka.actor.ActorSystem;
@@ -28,11 +29,14 @@ public class AkkaInitialization {
 
 	@Delegate( types = DelegatedMethods.class )
 	final private AkkaActors akkaActors;
+	
+	@Getter
+	Injectables injectables;
 
 	public AkkaInitialization( Set<Class<?>> classes, AkkaConfiguration configuration ) throws InjectionException {
 		ActorSystem actorSystem = createActorSystem( configuration );
 		InjectableDiscoveryService injectableDiscoveryService = new InjectableDiscoveryService( configuration );
-		Injectables injectables = injectableDiscoveryService.discovery( classes );
+		injectables = injectableDiscoveryService.discovery( classes );
 		configuration.setInjectables( injectables );
 		this.akkaActors = new DefaultAkkaActors( injectables, actorSystem );
 		configuration.setAkkaActors( this.akkaActors );

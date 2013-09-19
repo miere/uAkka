@@ -28,9 +28,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.skullabs.layr</groupId>
+			<groupId>com.texoit.layr</groupId>
 			<artifactId>layr-servlet</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.spec.javax.servlet</groupId>

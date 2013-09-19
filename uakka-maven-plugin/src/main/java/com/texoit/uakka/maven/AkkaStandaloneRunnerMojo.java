@@ -19,7 +19,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
 
-import com.texoit.uakka.standalone.StandaloneAkkaInitialization;
+import com.texoit.uakka.standalone.StandaloneUAkka;
 
 /**
  * @goal run
@@ -110,7 +110,7 @@ public class AkkaStandaloneRunnerMojo extends AbstractMojo {
 		return String.format(
 				"java -cp %s %s %s",
 				this.classPath.toString(),
-				StandaloneAkkaInitialization.class.getCanonicalName(),
+				StandaloneUAkka.class.getCanonicalName(),
 				this.project.getArtifactId() );
 	}
 
