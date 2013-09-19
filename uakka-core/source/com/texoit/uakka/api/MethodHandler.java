@@ -25,13 +25,17 @@ public class MethodHandler {
 
 	public MethodHandler( Object handledObject ) {
 		setHandledObject( handledObject );
-		memorizeHandledMethods();
+		memorizeReceiverMethods();
 	}
 
-	public void memorizeHandledMethods() {
-		for ( Method method : getHandledObject().getClass().getDeclaredMethods() )
-			if ( method.getName().equals( "handle" ) )
-				memorize( method );
+	public void memorizeReceiverMethods() {
+		Class<? extends Object> clazz = getHandledObject().getClass();
+		while ( !clazz.equals(Object.class) ) {
+			for ( Method method : clazz.getDeclaredMethods() )
+				if ( method.isAnnotationPresent(Receiver.class) )
+					memorize( method );
+			clazz = clazz.getSuperclass();
+		}
 	}
 
 	public void memorize( Method method ) {
@@ -57,7 +61,7 @@ public class MethodHandler {
 	public Object runHandlerMethodFor( Object message ) throws MethodHandlerException {
 		Method method = this.methods.get( message.getClass().getCanonicalName() );
 		if ( method == null )
-			throw new UnhandledMessageException();
+			throw new UnhandledMessageException( message );
 		try {
 			return method.invoke( this.handledObject, message );
 		} catch ( InvocationTargetException e ) {

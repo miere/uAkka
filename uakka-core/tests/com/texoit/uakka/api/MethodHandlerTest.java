@@ -21,13 +21,13 @@ public class MethodHandlerTest {
 	public void setup() throws NoSuchMethodException, SecurityException {
 		this.sampleHandledClass = spy( this.sampleHandledClass );
 		this.methodHandler = spy( new MethodHandler( this.sampleHandledClass ) );
-		this.methodHandler.memorizeHandledMethods();
+		this.methodHandler.memorizeReceiverMethods();
 		Method method = retrieveInvalidMethod();
 		verify( this.methodHandler ).logCantMemorizeMethod( method );
 	}
 
 	private Method retrieveInvalidMethod() throws NoSuchMethodException, SecurityException {
-		return this.sampleHandledClass.getClass().getDeclaredMethod( "handle" );
+		return this.sampleHandledClass.getClass().getSuperclass().getDeclaredMethod( "handle" );
 	}
 
 	@Test
