@@ -1,5 +1,7 @@
 package com.texoit.uakka.api.actor;
 
+import java.util.concurrent.Future;
+
 import com.texoit.uakka.api.AkkaActors;
 import com.texoit.uakka.api.ActorInfo.SearchInfo;
 
@@ -35,5 +37,9 @@ public class ActorSelection extends akka.actor.ActorSelection {
 	@Override
 	public void tell( Object message ) {
 		tell( message, ActorRef.noSender() );
+	}
+
+	public Future<Object> ask( Object message ) {
+		return Ask.ask(getActorSelection(), message);
 	}
 }

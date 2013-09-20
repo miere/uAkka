@@ -1,5 +1,7 @@
 package com.texoit.uakka.api.actor;
 
+import java.util.concurrent.Future;
+
 import com.texoit.uakka.api.AkkaActors;
 import com.texoit.uakka.api.ActorInfo.CreationInfo;
 
@@ -46,5 +48,9 @@ public class ActorRef extends akka.actor.ActorRef implements ScalaActorRef {
 
 	public void tell( Object message ) {
 		tell( message, noSender() );
+	}
+	
+	public Future<Object> ask( Object message ) {
+		return Ask.ask(getActorRef(), message);
 	}
 }
