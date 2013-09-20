@@ -8,19 +8,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class PersistedData {
 
-	public PersistedData( AtomicInteger integer ) {
-		setIntegerData( integer.get() );
+	public PersistedData(AtomicInteger integer) {
+		setIntegerData(integer.get());
 	}
 
 	@Id
-	@GeneratedValue( strategy = GenerationType.IDENTITY )
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
 	Integer integerData;
-
 }
