@@ -1,4 +1,4 @@
-package com.texoit.uakka.standalone;
+package com.texoit.uakka.service;
 
 import java.io.File;
 import java.io.IOException;

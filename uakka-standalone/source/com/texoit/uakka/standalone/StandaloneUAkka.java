@@ -10,6 +10,7 @@ import lombok.extern.java.Log;
 import com.texoit.uakka.api.Injectables;
 import com.texoit.uakka.api.exception.InjectionException;
 import com.texoit.uakka.service.AkkaInitialization;
+import com.texoit.uakka.service.SystemResourceLoader;
 
 @Log
 @RequiredArgsConstructor
