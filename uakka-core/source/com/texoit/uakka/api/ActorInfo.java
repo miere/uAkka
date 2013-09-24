@@ -1,11 +1,11 @@
 package com.texoit.uakka.api;
 
-import com.texoit.uakka.api.exception.InjectionException;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import akka.actor.Actor;
+
+import com.texoit.uakka.api.exception.InjectionException;
 
 public class ActorInfo {
 

@@ -20,7 +20,6 @@ public class HandledActor extends UntypedActor {
 				reply( returnedObject );
 			onSuccess( returnedObject );
 		} catch ( UnhandledMessageException e ) {
-			log.warning( e.toString() );
 			unhandled( message );
 		} catch ( MethodHandlerException e ) {
 			onFail( e );
@@ -58,6 +57,12 @@ public class HandledActor extends UntypedActor {
 			cause = e;
 		log.severe( cause.getMessage() );
 		reply( cause );
+	}
+	
+	@Override
+	public void unhandled(Object message) {
+		log.warning( "Unhandled message: " + message );
+		super.unhandled(message);
 	}
 
 	/**
