@@ -13,9 +13,6 @@ public class CircularQueue<T> {
 
 	public T next() {
 		updateCursor();
-		if ( data.size() == 0 )
-			return null;
-
 		T item = data.get(current);
 		if ( item != null )
 			current++;
@@ -23,23 +20,15 @@ public class CircularQueue<T> {
 	}
 
 	void updateCursor(){
-		if ( data.size() <= current )
+		if ( data.size() < current )
 			current = 0;
 	}
 
 	public void pull( T item ) {
 		data.add( item );
 	}
-
+	
 	public void remove( T item ) {
-		data.remove(item);
-	}
-	
-	public void clear(){
-		data.clear();
-	}
-	
-	public int size(){
-		return data.size();
+		data.remove(current);
 	}
 }

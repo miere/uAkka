@@ -6,14 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.texoit.uakka.api.AkkaActors;
-import com.texoit.uakka.api.Injectables;
-import com.texoit.uakka.api.Service;
-import com.texoit.uakka.api.ActorInfo.CreationInfo;
-import com.texoit.uakka.api.ActorInfo.SearchInfo;
-import com.texoit.uakka.api.exception.InjectionException;
-import com.texoit.uakka.inject.HandledInjectableClass;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -26,6 +18,14 @@ import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.japi.Creator;
+
+import com.texoit.uakka.api.ActorInfo.CreationInfo;
+import com.texoit.uakka.api.ActorInfo.SearchInfo;
+import com.texoit.uakka.api.AkkaActors;
+import com.texoit.uakka.api.Injectables;
+import com.texoit.uakka.api.Service;
+import com.texoit.uakka.api.exception.InjectionException;
+import com.texoit.uakka.inject.HandledInjectableClass;
 
 @Getter
 @RequiredArgsConstructor
@@ -126,5 +126,9 @@ public class DefaultAkkaActors implements AkkaActors {
 		FiniteDuration duration = Duration.create( 30, TimeUnit.SECONDS );
 		this.actorSystem.shutdown();
 		this.actorSystem.awaitTermination( duration );
+	}
+	
+	public Collection<String> getAvailableActorNames(){
+		return actorReferences.keySet();
 	}
 }

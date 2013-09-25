@@ -29,4 +29,6 @@ public interface AkkaActors {
 
 	public ActorSystem getActorSystem();
 
+	public Collection<String> getAvailableActorNames();
+
 }
