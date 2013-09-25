@@ -1,14 +1,17 @@
 package com.texoit.uakka.api;
 
+import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
+
+import com.texoit.uakka.api.actor.Ping;
+import com.texoit.uakka.api.actor.Pong;
 import com.texoit.uakka.api.exception.MethodHandlerException;
 import com.texoit.uakka.api.exception.UnhandledMessageException;
 
-import lombok.extern.java.Log;
-import akka.actor.UntypedActor;
-
-@Log
 public class HandledActor extends UntypedActor {
 
+	LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 	MethodHandler handledMethods = new MethodHandler( this );
 
 	@Override
@@ -34,6 +37,7 @@ public class HandledActor extends UntypedActor {
 	 * @param object
 	 */
 	protected void reply( Object object ) {
+		log.debug("Replying " + object + " to " + getSender().path() );
 		getSender().tell( object, getSelf() );
 	}
 
@@ -55,13 +59,14 @@ public class HandledActor extends UntypedActor {
 		Throwable cause = e.getCause();
 		if ( cause == null )
 			cause = e;
-		log.severe( cause.getMessage() );
+		log.error( "Failed on handle message from " + getSender().path() + ". Reason: " + cause.getMessage() );
 		reply( cause );
+		cause.printStackTrace();
 	}
-	
+
 	@Override
 	public void unhandled(Object message) {
-		log.warning( "Unhandled message: " + message );
+		log.warning( "Unhandled message sent from actor " + getSender().path() + ": " + message );
 		super.unhandled(message);
 	}
 
@@ -77,5 +82,16 @@ public class HandledActor extends UntypedActor {
 	 * overridden by developers to run something after every arrived message.
 	 */
 	public void afterMessage() {
+	}
+	
+	/**
+	 * Just a ping message receiver. Useful to test actor availability.
+	 * 
+	 * @param ping
+	 * @return
+	 */
+	@Receiver
+	public Pong onPing( Ping ping ) {
+		return Pong.message();
 	}
 }
