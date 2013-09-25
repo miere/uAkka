@@ -1,6 +1,7 @@
 package com.texoit.uakka.service;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -129,6 +130,6 @@ public class DefaultAkkaActors implements AkkaActors {
 	}
 	
 	public Collection<String> getAvailableActorNames(){
-		return actorReferences.keySet();
+		return new ArrayList<String>( actorReferences.keySet() );
 	}
 }

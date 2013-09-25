@@ -39,7 +39,7 @@ public class CircularQueue<T> {
 		data.clear();
 	}
 	
-	public void size(){
-		data.size();
+	public int size(){
+		return data.size();
 	}
 }

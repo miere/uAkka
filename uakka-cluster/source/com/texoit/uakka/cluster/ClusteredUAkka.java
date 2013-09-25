@@ -1,8 +1,12 @@
 package com.texoit.uakka.cluster;
 
 import lombok.extern.java.Log;
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.cluster.Cluster;
+import akka.cluster.ClusterEvent.MemberRemoved;
+import akka.cluster.ClusterEvent.MemberUp;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException.Missing;
@@ -20,7 +24,10 @@ public class ClusteredUAkka {
 
 	public void initialize( String applicationName ){
 		ActorSystem actorSystem = createActorSystem( applicationName );
-		actorSystem.actorOf(Props.create( ClusterHandshakeActor.class ));
+		ActorRef handshakeActor = actorSystem.actorOf(Props.create( ClusterHandshakeActor.class ));
+		Cluster cluster = Cluster.get(actorSystem);
+		cluster.subscribe(handshakeActor, MemberUp.class);
+		cluster.subscribe(handshakeActor, MemberRemoved.class);
 	}
 
 	private ActorSystem createActorSystem( String applicationName ) {

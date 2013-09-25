@@ -1,7 +1,7 @@
 package com.texoit.uakka.cluster;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -16,6 +16,6 @@ public class AvailableActors implements Serializable {
 	private static final long serialVersionUID = -95147030385059738L;
 
 	final Address from;
-	final List<String> actors;
+	final Collection<String> actors;
 
 }
