@@ -36,6 +36,11 @@ public class ClusterHandshakeActor extends HandledActor {
 		cluster = Cluster.get( getContext().system() );
 	}
 
+	/**
+	 * Listen to notifications for remote nodes added to cluster.
+	 * 
+	 * @param memberUp
+	 */
 	@Receiver
 	public void onMemberUp( MemberUp memberUp ){
 		Address address = memberUp.member().address();
@@ -50,6 +55,11 @@ public class ClusterHandshakeActor extends HandledActor {
 		actor.tell(ProvideAvailableActors.create(), getSelf());
 	}
 
+	/**
+	 * Listen to notifications for remote nodes removed from cluster.
+	 * 
+	 * @param memberRemoved
+	 */
 	@Receiver
 	public void onMemberRemoved( MemberRemoved memberRemoved ){
 		Address address = memberRemoved.member().address();
@@ -61,6 +71,11 @@ public class ClusterHandshakeActor extends HandledActor {
 		return address.hostString().equals( cluster.selfAddress().hostString() );
 	}
 
+	/**
+	 * Listen to notifications for new available actors on cluster remote nodes.
+	 * 
+	 * @param availableActors
+	 */
 	@Receiver
 	public void onReceiveAvailablesActors( AvailableActors availableActors ){
 		Address address = availableActors.from();
@@ -69,6 +84,14 @@ public class ClusterHandshakeActor extends HandledActor {
 			registerDispatchAddressForActor(address, name);
 	}
 
+	/**
+	 * Create an actor dispatcher for remote address with specified name.
+	 * If a dispatcher is already created, them it will just register a new
+	 * address location.
+	 * 
+	 * @param address
+	 * @param name
+	 */
 	void registerDispatchAddressForActor(Address address, String name) {
 		if ( name.equals( getClass().getSimpleName() ) )
 			return;
@@ -82,17 +105,35 @@ public class ClusterHandshakeActor extends HandledActor {
 		return dispatchersByName.containsKey(name);
 	}
 
-	void createActorDispatcherFor(String name, Address address) {
-		log.info( "Creating actor dispatcher for " + name + " at " + address.hostString() );
-		ActorRef actorDispatcher = actorSystem().actorOf(Props.create(ClusterDispatcherActor.class, name, address), name);
-		dispatchersByName.put( name, actorDispatcher);
-		log.info("New actor available on cluster: " + name + " pointing " + address.hostString());
-	}
-
+	/**
+	 * It register a new address location at actor dispatcher
+	 * named with parameter name.
+	 * 
+	 * @param name
+	 * @param address
+	 */
 	void registerActorNewAddress( String name, Address address ){
 		ActorRef dispatcher = dispatchersByName.get( name );
 		dispatcher.tell(RegisterRemoteActor.at(address), ActorRef.noSender());
 		log.info("New location available for actor: " + name + " at " + address.hostString());
+	}
+
+	/**
+	 * Create actor dispatcher named with parameter name. It will be
+	 * initially configured to handle communication with specified 
+	 * address parameter.
+	 * 
+	 * @param name
+	 * @param address
+	 */
+	void createActorDispatcherFor(String name, Address address) {
+		log.info( "Creating actor dispatcher for " + name + " at " + address.hostString() );
+		Props actorCreationProperties =
+				Props.create(ClusterDispatcherActor.class, name, address)
+					 .withDispatcher("uakka.cluster.dispatcher");
+		ActorRef actorDispatcher = actorSystem().actorOf(actorCreationProperties, name);
+		dispatchersByName.put( name, actorDispatcher);
+		log.info("New actor available on cluster: " + name + " pointing " + address.hostString());
 	}
 
 	/**
@@ -110,7 +151,7 @@ public class ClusterHandshakeActor extends HandledActor {
 			);
 	}
 
-	public ActorSystem actorSystem() {
+	ActorSystem actorSystem() {
 		if ( actorSystem == null )
 			actorSystem = getContext().system();
 		return actorSystem;

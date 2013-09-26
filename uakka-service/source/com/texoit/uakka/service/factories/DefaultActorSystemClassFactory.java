@@ -1,18 +1,19 @@
-package com.texoit.uakka.service;
+package com.texoit.uakka.service.factories;
 
 import java.lang.reflect.Field;
 
-import com.texoit.uakka.api.AkkaConfiguration;
+import akka.actor.ActorSystem;
+
 import com.texoit.uakka.api.exception.InjectionException;
 import com.texoit.uakka.inject.AbstractInjectableClassFactory;
 
-public class DefaultAkkaConfigurationClassFactory 
-	extends AbstractInjectableClassFactory<AkkaConfiguration> {
+public class DefaultActorSystemClassFactory 
+	extends AbstractInjectableClassFactory<ActorSystem> {
 
 	@Override
 	public Object newInstance(Object instance, Field injectableField)
 			throws InjectionException {
-		return getConfiguration();
+		return getConfiguration().getAkkaActors().getActorSystem();
 	}
 
 }

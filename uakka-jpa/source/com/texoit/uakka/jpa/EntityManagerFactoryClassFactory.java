@@ -1,7 +1,5 @@
 package com.texoit.uakka.jpa;
 
-import static com.texoit.uakka.commons.Commons.str;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,13 +8,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 
-import com.texoit.uakka.api.exception.InjectionException;
-import com.texoit.uakka.inject.AbstractInjectableClassFactory;
-
 import lombok.Synchronized;
+import lombok.experimental.ExtensionMethod;
 import lombok.extern.java.Log;
 
+import com.texoit.uakka.api.exception.InjectionException;
+import com.texoit.uakka.commons.Commons;
+import com.texoit.uakka.inject.AbstractInjectableClassFactory;
+
 @Log
+@ExtensionMethod(Commons.class)
 public class EntityManagerFactoryClassFactory extends AbstractInjectableClassFactory<PersistenceUnit> {
 
 	static final String FACTORIES = EntityManagerFactoryClassFactory.class.getCanonicalName() + ".FACTORIES";
@@ -46,7 +47,7 @@ public class EntityManagerFactoryClassFactory extends AbstractInjectableClassFac
 	EntityManagerFactory createAndMemorizeFactory( String persistUnitName ) {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory( persistUnitName );
 		this.factories.put( persistUnitName, factory );
-		log.info( str( "Creating Entity Manager Factory( persistUnitName=\"%s\" )", persistUnitName ) );
+		log.info( "Creating Entity Manager Factory( persistUnitName=\"%s\" )".str( persistUnitName ) );
 		return factory;
 	}
 

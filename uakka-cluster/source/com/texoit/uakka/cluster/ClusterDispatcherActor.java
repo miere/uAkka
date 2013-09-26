@@ -15,8 +15,9 @@ import com.texoit.uakka.api.HandledActor;
 import com.texoit.uakka.api.Receiver;
 import com.texoit.uakka.api.actor.Ask;
 import com.texoit.uakka.api.actor.Ping;
+import com.texoit.uakka.commons.Commons;
 
-@ExtensionMethod({AddressExtension.class, Ask.class})
+@ExtensionMethod({AddressExtension.class, Ask.class, Commons.class})
 @RequiredArgsConstructor
 public class ClusterDispatcherActor extends HandledActor {
 
@@ -31,6 +32,7 @@ public class ClusterDispatcherActor extends HandledActor {
 	public void preStart() throws Exception {
 		super.preStart();
 		registerNewAddress( address );
+//		Props withRouter = context().actorOf(Props.)
 	}
 
 	@Override
@@ -65,14 +67,6 @@ public class ClusterDispatcherActor extends HandledActor {
 		ActorSelection item = clusteredActorsByAddress.get(addressHost);
 		actors.remove(item);
 		clusteredActorsByAddress.remove(addressHost);
-		stopIfHaveNoActorsToHandleAndDispatch();
-	}
-
-	void stopIfHaveNoActorsToHandleAndDispatch() {
-		if ( actors.size() == 0 ){
-			log.info("No actor name " + actorName + " remains up. Stopping dispatcher.");
-			context().stop( getSelf() );
-		}
 	}
 
 	@Override
@@ -80,7 +74,8 @@ public class ClusterDispatcherActor extends HandledActor {
 		try {
 			ActorSelection next = actors.next();
 			if ( next != null ){
-				System.err.println( "Dispatching " + message + " to " + next.toString() );
+//				log.debug("Message %s -> %s".str(message, next));
+				System.err.println("Message %s -> %s".str(message, next));
 				next.tell( message, getSender() );
 				return;
 			}

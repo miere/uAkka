@@ -24,22 +24,28 @@ public class ClusteredUAkka {
 
 	public void initialize( String applicationName ){
 		ActorSystem actorSystem = createActorSystem( applicationName );
-		ActorRef handshakeActor = actorSystem.actorOf(Props.create( ClusterHandshakeActor.class ));
+		ActorRef handshakeActor = actorSystem.actorOf(
+				Props.create( ClusterHandshakeActor.class ),
+				ClusterHandshakeActor.class.getSimpleName());
 		Cluster cluster = Cluster.get(actorSystem);
 		cluster.subscribe(handshakeActor, MemberUp.class);
 		cluster.subscribe(handshakeActor, MemberRemoved.class);
 	}
 
 	private ActorSystem createActorSystem( String applicationName ) {
-		Config defaultConfig = ConfigFactory.load();
-		Config config = readConfig( applicationName, defaultConfig );
+		Config config = readConfig( applicationName );
 		log.info( "Creating ActorSystem for " + applicationName );
 		return ActorSystem.create( applicationName, config );
 	}
 
-	private Config readConfig( String applicationName, Config defaultConfig ) {
+	private Config readConfig( String applicationName ) {
 		String configFile = System.getProperty( "uakka.configFile", "META-INF/application" );
-		Config readConfig = ConfigFactory.load( configFile ).withFallback( defaultConfig );
+		Config defaultConfig = ConfigFactory.load();
+		Config clusterConfig = ConfigFactory.load("META-INF/cluster");
+		Config readConfig = ConfigFactory
+				.load( configFile )
+				.withFallback( clusterConfig )
+				.withFallback( defaultConfig );
 		try {
 			return readConfig.getConfig( applicationName );
 		} catch ( Missing e ) {
