@@ -12,10 +12,19 @@ import akka.util.Timeout;
 
 public class Ask {
 
+	public static final long DEFAULT_TIMEOUT = 30000L;
+
 	public static <T extends akka.actor.ActorRef> Future<Object> ask(
 			T self, Object message ) {
-		return ask( self, message, Duration.create( 30L, TimeUnit.SECONDS ) );
+		return ask( self, message, DEFAULT_TIMEOUT );
 	}
+	
+	public static <T extends akka.actor.ActorRef> Future<Object> ask(
+			T self, Object message, Long milliseconds ) {
+		if( milliseconds == null || milliseconds == 0 )
+			throw new IllegalArgumentException("Parameter milliseconds cannot be null nor zero valued.");
+		return ask( self, message, Duration.create( milliseconds, TimeUnit.MILLISECONDS ) );
+	}	
 
 	public static <T extends akka.actor.ActorRef> Future<Object> ask(
 			T self, Object message, FiniteDuration duration ) {
@@ -27,7 +36,14 @@ public class Ask {
 
 	public static <T extends akka.actor.ActorSelection> Future<Object> ask(
 			T self, Object message ) {
-		return ask( self, message, Duration.create( 30L, TimeUnit.SECONDS ) );
+		return ask( self, message, DEFAULT_TIMEOUT );
+	}
+	
+	public static <T extends akka.actor.ActorSelection> Future<Object> ask(
+			T self, Object message, Long milliseconds ) {
+		if( milliseconds == null || milliseconds == 0 )
+			throw new IllegalArgumentException("Parameter milliseconds cannot be null nor zero valued.");
+		return ask( self, message, Duration.create( milliseconds, TimeUnit.MILLISECONDS ) );
 	}
 
 	public static <T extends akka.actor.ActorSelection> Future<Object> ask(
@@ -40,20 +56,20 @@ public class Ask {
 
 	public static akka.actor.ActorSelection unwrap( akka.actor.ActorSelection actorSelection ) {
 		if ( actorSelection instanceof ActorSelection )
-			return ( (ActorSelection)actorSelection ).getActorSelection();
+			return ( (ActorSelection) actorSelection ).getActorSelection();
 		return actorSelection;
 	}
 
 	public static akka.actor.ActorRef unwrap( akka.actor.ActorRef actorRef ) {
 		if ( actorRef instanceof ActorRef )
-			return ( (ActorRef)actorRef ).getActorRef();
+			return ( (ActorRef) actorRef ).getActorRef();
 		return actorRef;
 	}
 
 	public static <T> T getOrThrow( Future<T> future ) throws Exception {
 		T t = future.get();
 		if ( t instanceof Exception )
-			throw (Exception)t;
+			throw (Exception) t;
 		return t;
 	}
 }
