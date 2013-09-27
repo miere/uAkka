@@ -3,6 +3,9 @@ package com.texoit.uakka.cluster;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
@@ -19,14 +22,20 @@ import com.texoit.uakka.api.AkkaActors;
 import com.texoit.uakka.api.HandledActor;
 import com.texoit.uakka.api.Receiver;
 import com.texoit.uakka.api.Service;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException.Missing;
 
 @Service("ClusterHandshakeActor")
 @ExtensionMethod(AddressExtension.class)
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class ClusterHandshakeActor extends HandledActor {
 
 	LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 	Map<String, ActorRef> dispatchersByName = new HashMap<String, ActorRef>();
 
+	@NonNull Config config;
+	
 	AkkaActors akkaActors;
 	ActorSystem actorSystem;
 	Cluster cluster;
@@ -128,12 +137,21 @@ public class ClusterHandshakeActor extends HandledActor {
 	 */
 	void createActorDispatcherFor(String name, Address address) {
 		log.info( "Creating actor dispatcher for " + name + " at " + address.hostString() );
+		Long timeout = getDefaultAskTimeout();
 		Props actorCreationProperties =
-				Props.create(ClusterDispatcherActor.class, name, address)
+				Props.create(ClusterDispatcherActor.class, name, address, timeout)
 					 .withDispatcher("uakka.cluster.dispatcher");
 		ActorRef actorDispatcher = actorSystem().actorOf(actorCreationProperties, name);
 		dispatchersByName.put( name, actorDispatcher);
 		log.info("New actor available on cluster: " + name + " pointing " + address.hostString());
+	}
+
+	long getDefaultAskTimeout() {
+		try {
+			return config.getLong( "uakka.cluster.ask-timeout" );
+		} catch ( Missing missing ) {
+			return 300000;
+		}
 	}
 
 	/**

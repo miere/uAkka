@@ -16,26 +16,25 @@ import com.typesafe.config.ConfigFactory;
 public class ClusteredUAkka {
 
 	public static void main(String[] args) {
+		String clusterName = "ClusterNodeOne";
 		if ( args.length > 0 )
 			System.setProperty("akka.remote.netty.tcp.port", args[0]);
+		if ( args.length > 1 )
+			clusterName = args[1];
 		ClusteredUAkka clusteredUAkka = new ClusteredUAkka();
-		clusteredUAkka.initialize("ClusterNodeOne");
+		clusteredUAkka.initialize( clusterName );
 	}
 
 	public void initialize( String applicationName ){
-		ActorSystem actorSystem = createActorSystem( applicationName );
+		Config config = readConfig( applicationName );
+		log.info( "Creating ActorSystem for " + applicationName );
+		ActorSystem actorSystem = ActorSystem.create( applicationName, config );
 		ActorRef handshakeActor = actorSystem.actorOf(
-				Props.create( ClusterHandshakeActor.class ),
+				Props.create( ClusterHandshakeActor.class, config ),
 				ClusterHandshakeActor.class.getSimpleName());
 		Cluster cluster = Cluster.get(actorSystem);
 		cluster.subscribe(handshakeActor, MemberUp.class);
 		cluster.subscribe(handshakeActor, MemberRemoved.class);
-	}
-
-	private ActorSystem createActorSystem( String applicationName ) {
-		Config config = readConfig( applicationName );
-		log.info( "Creating ActorSystem for " + applicationName );
-		return ActorSystem.create( applicationName, config );
 	}
 
 	private Config readConfig( String applicationName ) {

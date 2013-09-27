@@ -5,6 +5,7 @@ import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
+import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
 import akka.actor.Address;
@@ -15,6 +16,7 @@ import com.texoit.uakka.api.HandledActor;
 import com.texoit.uakka.api.Receiver;
 import com.texoit.uakka.api.actor.Ask;
 import com.texoit.uakka.api.actor.Ping;
+import com.texoit.uakka.api.future.Function;
 import com.texoit.uakka.commons.Commons;
 
 @ExtensionMethod({AddressExtension.class, Ask.class, Commons.class})
@@ -27,12 +29,12 @@ public class ClusterDispatcherActor extends HandledActor {
 
 	final String actorName;
 	final Address address;
+	final Long defaulAskTimeout;
 
 	@Override
 	public void preStart() throws Exception {
 		super.preStart();
 		registerNewAddress( address );
-//		Props withRouter = context().actorOf(Props.)
 	}
 
 	@Override
@@ -72,15 +74,7 @@ public class ClusterDispatcherActor extends HandledActor {
 	@Override
 	public void unhandled(Object message) {
 		try {
-			ActorSelection next = actors.next();
-			if ( next != null ){
-//				log.debug("Message %s -> %s".str(message, next));
-				System.err.println("Message %s -> %s".str(message, next));
-				next.tell( message, getSender() );
-				return;
-			}
-			log.warning("No actors available for " + actorName );
-			super.unhandled(message);
+			dispatchMessageToNextAvailableActor(message);
 		} catch ( Throwable cause ) {
 			cause.printStackTrace();
 			log.error(cause, "Can't handle message " + message );
@@ -88,7 +82,48 @@ public class ClusterDispatcherActor extends HandledActor {
 		}
 	}
 
+	void dispatchMessageToNextAvailableActor(Object message) {
+		ActorSelection next = actors.next();
+		if ( next != null ){
+			log.debug("Message %s -> %s".str(message, next));
+			ask( next, message );
+			return;
+		}
+		log.warning("No actors available for " + actorName );
+		super.unhandled(message);
+	}
+
+	void ask(ActorSelection next, Object message ) {
+		next.promise( message, defaulAskTimeout )
+			.handle(ResponseReplyer.to(getSender(), getSelf()),
+					FailureReplyer.to(getSender(), getSelf()));
+	}
+
 	ActorSystem actorSystem(){
 		return getContext().system();
+	}
+
+	@RequiredArgsConstructor(staticName="to")
+	static class ResponseReplyer implements Function<Object> {
+		
+		final ActorRef to;
+		final ActorRef from;
+
+		@Override
+		public void run(Object parameter) {
+			to.tell( parameter, from );
+		}
+	}
+
+	@RequiredArgsConstructor(staticName="to")
+	static class FailureReplyer implements Function<Throwable> {
+
+		final ActorRef to;
+		final ActorRef from;
+
+		@Override
+		public void run(Throwable failureCause) {
+			to.tell( failureCause, from );
+		}
 	}
 }
