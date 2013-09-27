@@ -1,4 +1,4 @@
-package com.texoit.uakka.api.actor;
+package com.texoit.uakka.api.future;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;

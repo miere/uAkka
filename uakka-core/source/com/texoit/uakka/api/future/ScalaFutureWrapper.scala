@@ -1,4 +1,4 @@
-package com.texoit.uakka.api.actor
+package com.texoit.uakka.api.future
 
 import scala.concurrent._
 import ExecutionContext.Implicits.global
@@ -21,4 +21,14 @@ object ScalaFutureWrapper {
 
     data
   }
+
+  def handle[T](future:Future[T], onSuccess:Function[T], onFail:Function[Throwable]) = {
+    future onComplete {
+      case Success(obj) =>
+        onSuccess.run(obj)
+      case Failure(obj) =>
+        onFail.run(obj)
+    }
+  }
+
 }
