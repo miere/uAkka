@@ -40,7 +40,7 @@ public class InjectableDiscoveryService {
 			factory.initialize( this.configuration );
 			this.classFactories.put( factory.getGenericClass().getCanonicalName(), factory );
 		} catch ( Exception e ) {
-			throw new InjectionException( "Can't to memorize class factory " + clazz.getCanonicalName(), e );
+			throw new InjectionException( "Can't memorize class factory " + clazz.getCanonicalName(), e );
 		}
 	}
 }

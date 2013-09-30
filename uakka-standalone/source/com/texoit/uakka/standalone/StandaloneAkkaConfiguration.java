@@ -1,6 +1,7 @@
 package com.texoit.uakka.standalone;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import lombok.Delegate;
 import lombok.Getter;
@@ -21,18 +22,18 @@ public class StandaloneAkkaConfiguration
 	final String applicationName;
 
 	@Delegate
-	Map<String, Object> attributes;
+	Map<String, Object> attributes = new TreeMap<String, Object>();
 	Injectables injectables;
 	AkkaActors akkaActors;
 	Config config;
-
+		
 	@Override
 	public void setAttribute( String name, Object value ) {
 		this.attributes.put( name, value );
 	}
 
 	@Override
-	public Object getAttribute( String name ) {
+	public Object getAttribute( String name ) {		
 		return this.attributes.get( name );
 	}
 
