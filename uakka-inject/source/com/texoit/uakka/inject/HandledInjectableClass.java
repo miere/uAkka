@@ -54,7 +54,7 @@ public class HandledInjectableClass {
 				field.inject( newInstance );
 			return newInstance;
 		} catch ( Exception e ) {
-			throw new InjectionException( "Can't to instantiate " + this.targetClass.getCanonicalName(), e );
+			throw new InjectionException( "Can't instantiate " + this.targetClass.getCanonicalName(), e );
 		}
 	}
 

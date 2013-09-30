@@ -18,7 +18,7 @@ import com.texoit.uakka.inject.AbstractInjectableClassFactory;
 
 @Log
 @ExtensionMethod(Commons.class)
-public class EntityManagerFactoryClassFactory extends AbstractInjectableClassFactory<PersistenceUnit> {
+public class EntityManagerFactoryClassFactory extends AbstractInjectableClassFactory<EntityManagerFactory> {
 
 	static final String FACTORIES = EntityManagerFactoryClassFactory.class.getCanonicalName() + ".FACTORIES";
 
@@ -37,10 +37,14 @@ public class EntityManagerFactoryClassFactory extends AbstractInjectableClassFac
 	@Synchronized
 	@Override
 	public Object newInstance( Object instance, Field injectableField ) throws InjectionException {
-		String persistUnitName = extractPersistenceUnitName( injectableField );
-		EntityManagerFactory factory = this.factories.get( persistUnitName );
+		String persistenceUnitName = extractPersistenceUnitName( injectableField );
+		if( persistenceUnitName == null ) 
+			persistenceUnitName = extractPersistenceUnitName( instance ); 
+		if( persistenceUnitName == null )
+			log.warning( "No persistence unit name could be extracted for class " + instance.getClass().getName() );
+		EntityManagerFactory factory = this.factories.get( persistenceUnitName );
 		if ( factory == null )
-			factory = createAndMemorizeFactory( persistUnitName );
+			factory = createAndMemorizeFactory( persistenceUnitName );
 		return factory;
 	}
 
@@ -53,9 +57,13 @@ public class EntityManagerFactoryClassFactory extends AbstractInjectableClassFac
 
 	String extractPersistenceUnitName( Field injectableField ) {
 		PersistenceUnit persistenceUnit = injectableField.getAnnotation( PersistenceUnit.class );
-		String persistUnitName = firstOf( persistenceUnit.name(), persistenceUnit.unitName() );
-		return persistUnitName;
+		return persistenceUnit != null ? firstOf( persistenceUnit.name(), persistenceUnit.unitName() ) : null;
 	}
+	
+	String extractPersistenceUnitName( Object instance ) {
+		PersistenceUnit persistenceUnit = instance.getClass().getAnnotation( PersistenceUnit.class );
+		return persistenceUnit != null ? firstOf( persistenceUnit.name(), persistenceUnit.unitName() ) : null;
+	}	
 
 	String firstOf( String... strings ) {
 		for ( String string : strings )
