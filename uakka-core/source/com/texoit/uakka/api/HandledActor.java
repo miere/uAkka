@@ -38,7 +38,6 @@ public class HandledActor extends UntypedActor {
 	 */
 	protected void reply( Object object ) {
 		log.debug("Replying " + object + " to " + getSender().path() );
-		System.err.println("Replying " + object + " to " + getSender().path() );
 		getSender().tell( object, getSelf() );
 	}
 
