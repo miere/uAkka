@@ -89,6 +89,17 @@
 		<directory>${project.basedir}/output</directory>
 		<outputDirectory>${project.basedir}/output/classes</outputDirectory>
 		<testOutputDirectory>${project.basedir}/output/test-classes</testOutputDirectory>
+		<resources>
+            <resource>
+                <directory>${project.basedir}/configurations</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
 		<testResources>
 			<testResource>
 				<directory>${project.basedir}/tests</directory>
