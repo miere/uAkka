@@ -34,8 +34,9 @@ public class EntityManagerFactoryCloser implements ServletContextListener {
 	}
 
 	void close( Map<String, EntityManagerFactory> factories ) {
-		for ( EntityManagerFactory entityManagerFactory : factories.values() )
-			close( entityManagerFactory );
+		if ( factories != null )
+			for ( EntityManagerFactory entityManagerFactory : factories.values() )
+				close( entityManagerFactory );
 	}
 
 	void close( EntityManagerFactory entityManagerFactory ) {
