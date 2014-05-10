@@ -3,4 +3,6 @@
 .settings
 .classpath
 output
-
+target
+.cache
+.factorypath

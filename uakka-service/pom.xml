@@ -7,8 +7,8 @@
 		<version>1.0-SNAPSHOT</version>
 		<artifactId>uakka-parent</artifactId>
 	</parent>
-	<artifactId>uakka-core</artifactId>
-	<name>uAkka: Core Implementation and Utilities for Akka</name>
+	<artifactId>uakka-service</artifactId>
+	<name>uAkka: Service Discovery for Akka</name>
 	<packaging>jar</packaging>
 
 	<licenses>
@@ -26,6 +26,21 @@
 			<version>2.2.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-remote_2.10</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>uakka-inject</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.sonatype.sisu.inject</groupId> -->
+<!-- 			<artifactId>cglib</artifactId> -->
+<!-- 			<version>3.0</version> -->
+<!-- 		</dependency> -->
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>0.11.8</version>
@@ -35,12 +50,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -102,17 +111,8 @@
 				<version>2.15.2</version>
 				<executions>
 					<execution>
-						<id>scala-compile-first</id>
-						<phase>process-resources</phase>
 						<goals>
-						    <goal>add-source</goal>
 							<goal>compile</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>scala-test-compile</id>
-						<phase>process-test-resources</phase>
-						<goals>
 							<goal>testCompile</goal>
 						</goals>
 					</execution>
@@ -150,7 +150,6 @@
 										<goals>
 											<goal>compile</goal>
 											<goal>testCompile</goal>
-											<goal>add-source</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

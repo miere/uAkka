@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.texoit.uakka</groupId>
+		<version>1.0-SNAPSHOT</version>
+		<artifactId>uakka-parent</artifactId>
+	</parent>
+
+	<artifactId>uakka-test-suite</artifactId>
+	<name>uAkka: Test Suite for Java Akka Development</name>
+	<packaging>jar</packaging>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<dependencies>
+		<!-- Main Dependencies -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>uakka-standalone</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>0.12.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit-dep</artifactId>
+			<version>4.10</version>
+		</dependency>
+		<!-- Test Dependencies -->
+	</dependencies>
+
+	<build>
+		<sourceDirectory>source</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/tests</testSourceDirectory>
+		<directory>${project.basedir}/output</directory>
+		<outputDirectory>${project.basedir}/output/classes</outputDirectory>
+		<testOutputDirectory>${project.basedir}/output/test-classes</testOutputDirectory>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/tests</directory>
+				<includes>
+					<include>**/*.*</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<optimize>true</optimize>
+					<debug>false</debug>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.16</version>
+				<configuration>
+					<dependenciesToScan>
+        				<dependency>${project.groupId}:uakka-standalone</dependency>
+        				<dependency>${project.groupId}:uakka-service</dependency>
+        			</dependenciesToScan>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
